@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Wine_Store_Management_Web.Models.TiepNhanBaoHanh>
+
+@{
+    ViewData["Title"] = "Danh sách Bảo hành (BH_BM3)";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="text-warning text-dark">LỊCH SỬ TIẾP NHẬN BẢO HÀNH</h3>
+        <a asp-action="Create" class="btn btn-warning text-dark fw-bold"><i class="bi bi-tools"></i> Lập Biên Bản Mới</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover table-bordered align-middle text-center">
+                <thead class="table-warning">
+                    <tr>
+                        <th>Số BB</th>
+                        <th>Ngày Nhận</th>
+                        <th>Tên Khách Hàng</th>
+                        <th>Số Điện Thoại</th>
+                        <th>Mã Sản Phẩm</th>
+                        <th>Số Seri</th>
+                        <th>Mã Hóa Đơn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@item.SoBienBan</td>
+                            <td>@item.NgayTiepNhan.ToString("dd/MM/yyyy")</td>
+                            <td class="text-start">@item.HoTenKhachHang</td>
+                            <td>@item.SoDienThoai</td>
+                            <td>@item.MaSanPham</td>
+                            <td>@item.SoSeri</td>
+                            <td>@item.MaHoaDon</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+﻿@model Wine_Store_Management_Web.Models.PhieuNhap
+
+@{
+    ViewData["Title"] = "KHO_BM2 - Phiếu Nhập Kho";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <h6 class="m-0">Cửa Hàng Chilliquer Số 138, đường Mai Xuân Thưởng, Phường Nha Trang,Khánh Hòa</h6>
+                <h4 class="fw-bold mt-2 mb-1">PHIẾU NHẬP KHO</h4>
+                <p class="m-0">Ngày <input asp-for="NgayNhap" type="date" class="form-control form-control-sm d-inline-block w-auto" value="@DateTime.Now.ToString("yyyy-MM-dd")" /></p>
+                <p class="m-0 fw-bold">Mã Số: <input asp-for="MaPhieuNhap" class="form-control form-control-sm d-inline-block w-auto" placeholder="VD: NK00012" /></p>
+            </div>
+
+            <form asp-action="Create" method="post">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">- Nhà cung cấp:</label>
+                        <input asp-for="NhaCungCap" class="form-control" placeholder="CÔNG TY..." />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">- Nhập tại kho:</label>
+                        <input asp-for="NhapTaiKho" class="form-control" value="Kho NVL 138 Mai Xuân Thưởng" />
+                    </div>
+                </div>
+
+                <table class="table table-bordered align-middle text-center" id="nhapKhoTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 5%">STT</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th style="width: 15%">Mã Sản Phẩm</th>
+                            <th style="width: 10%">Đơn Vị Tính</th>
+                            <th style="width: 12%">Số Lượng</th>
+                            <th style="width: 15%">Đơn Giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><input class="form-control form-control-sm text-start" readonly placeholder="Hệ thống tự load" /></td>
+                            <td><input name="ChiTietPhieuNhaps[0].MaSanPham" class="form-control form-control-sm text-center" required /></td>
+                            <td><input class="form-control form-control-sm text-center" readonly /></td>
+                            <td><input name="ChiTietPhieuNhaps[0].SoLuong" type="number" class="form-control form-control-sm text-center" value="1" min="1" /></td>
+                            <td><input name="ChiTietPhieuNhaps[0].DonGia" type="number" step="0.01" class="form-control form-control-sm text-end" required /></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row g-3 mt-2 mb-4">
+                    <div class="col-12">
+                        <label class="form-label fw-bold">- Tổng số tiền (Viết bằng chữ):</label>
+                        <input asp-for="TongTienVietBangChu" class="form-control border-bottom-only" placeholder=".........................................................................................." readonly />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">- Số chứng từ gốc kèm theo:</label>
+                        <input asp-for="SoChungTuGoc" class="form-control border-bottom-only" placeholder=".............................................................................................." />
+                    </div>
+                </div>
+
+                <div class="row text-center mt-5 mb-4">
+                    <div class="col-6 offset-6">
+                        <p class="m-0">Ngày..... tháng..... năm.....</p>
+                        <p class="fw-bold m-0">Người nhập kho</p>
+                        <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
+                        <input asp-for="NguoiNhapKho" type="text" class="form-control form-control-sm w-50 mx-auto text-center" placeholder="Mã nhân viên" />
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 border-top pt-3">
+                    <button type="submit" class="btn btn-success px-5">Lưu Phiếu Nhập Kho</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-bottom-only {
+        border: none;
+        border-bottom: 1px dotted #000;
+        border-radius: 0;
+        background-color: transparent;
+    }
+</style>

@@ -62,6 +62,8 @@ namespace Wine_Store_Management_Web.Models
 
         [ForeignKey("MaKhuyenMai")]
         public virtual KhuyenMai? KhuyenMai { get; set; }
-    }
 
+        // Thuộc tính điều hướng trỏ tới danh sách chi tiết của hóa đơn
+        public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
+    }
 }

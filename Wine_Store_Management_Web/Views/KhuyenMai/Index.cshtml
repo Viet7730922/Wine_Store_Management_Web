@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Wine_Store_Management_Web.Models.KhuyenMai>
+
+@{
+    ViewData["Title"] = "Chương trình Khuyến mãi (QLCH_BM2)";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="text-danger">CHƯƠNG TRÌNH KHUYẾN MÃI</h3>
+        <a asp-action="Create" class="btn btn-danger"><i class="bi bi-gift"></i> Tạo Sự Kiện Mới</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover table-bordered align-middle text-center">
+                <thead class="table-danger">
+                    <tr>
+                        <th>Mã CT</th>
+                        <th>Tên Chương Trình</th>
+                        <th>Hình Thức</th>
+                        <th>Ngày Bắt Đầu</th>
+                        <th>Ngày Kết Thúc</th>
+                        <th>Trạng Thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var isExpired = DateTime.Now.Date > item.DenNgay;
+                        <tr>
+                            <td class="fw-bold">@item.MaChuongTrinh</td>
+                            <td class="text-start">@item.TenChuongTrinh</td>
+                            <td>@item.HinhThucApDung</td>
+                            <td>@item.TuNgay.ToString("dd/MM/yyyy")</td>
+                            <td>@item.DenNgay.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (isExpired)
+                                {
+                                    <span class="badge bg-secondary">Đã kết thúc</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Đang hiệu lực</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

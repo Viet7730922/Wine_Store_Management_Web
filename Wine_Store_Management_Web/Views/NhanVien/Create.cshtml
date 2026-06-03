@@ -1,0 +1,95 @@
+﻿@model Wine_Store_Management_Web.Models.NhanVien
+
+@{
+    ViewData["Title"] = "QLCH_BM1 - Tạo Tài Khoản & Phân Quyền";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-danger text-white text-center">
+            <h4 class="card-title mb-0">PHIẾU TẠO TÀI KHOẢN VÀ PHÂN QUYỀN NHÂN VIÊN</h4>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Mã nhân viên:</label>
+                        <input asp-for="MaNhanVien" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Họ và tên nhân viên:</label>
+                        <input asp-for="HoTen" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Ngày sinh:</label>
+                        <input asp-for="NgaySinh" type="date" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Số điện thoại:</label>
+                        <input asp-for="SoDienThoai" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Email:</label>
+                        <input asp-for="Email" type="email" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Tên đăng nhập hệ thống:</label>
+                        <input asp-for="TenDangNhap" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Mật khẩu khởi tạo:</label>
+                        <input asp-for="MatKhau" type="password" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6 border-end">
+                        <label class="form-label fw-bold">Chức vụ / Vai trò phân quyền</label>
+                        <div class="mt-2">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" asp-for="VaiTro" value="Quản lý cửa hàng (Admin)" id="roleAdmin">
+                                <label class="form-check-label" for="roleAdmin">Quản lý cửa hàng (Admin)</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" asp-for="VaiTro" value="Nhân viên thu ngân (Cashier)" id="roleCashier" checked>
+                                <label class="form-check-label" for="roleCashier">Nhân viên thu ngân (Cashier)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="VaiTro" value="Nhân viên quản lý kho (Staff)" id="roleStaff">
+                                <label class="form-check-label" for="roleStaff">Nhân viên quản lý kho (Staff)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Trạng thái tài khoản:</label>
+                        <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="TrangThai" value="Kích hoạt" id="sttActive" checked>
+                                <label class="form-check-label" for="sttActive">Kích hoạt</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="TrangThai" value="Khóa tạm thời" id="sttLocked">
+                                <label class="form-check-label" for="sttLocked">Khóa tạm thời</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-md-6 offset-md-6 text-center">
+                        <p class="m-0">Ngày <input asp-for="NgayLap" type="date" class="form-control form-control-sm d-inline w-auto" value="@DateTime.Now.ToString("yyyy-MM-dd")" /></p>
+                        <p class="fw-bold m-0 mt-2">Người thực hiện thiết lập</p>
+                        <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
+                        <input asp-for="NguoiThucHien" class="form-control w-50 mx-auto text-center" placeholder="Mã NV Admin" />
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 border-top pt-3">
+                    <button type="submit" class="btn btn-danger px-5">Tạo Tài Khoản</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">Hủy bỏ</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,98 @@
+﻿@model Wine_Store_Management_Web.Models.TiepNhanBaoHanh
+
+@{
+    ViewData["Title"] = "BH_BM3 - Tiếp Nhận Bảo Hành";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-body p-5">
+            <div class="text-center mb-4">
+                <h4 class="fw-bold">BIÊN BẢN TIẾP NHẬN BẢO HÀNH</h4>
+            </div>
+
+            <form asp-action="Create" method="post">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Ngày tiếp nhận:</label>
+                        <input asp-for="NgayTiepNhan" type="date" class="form-control form-control-sm w-50" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <label class="form-label fw-bold">Số: TNBH/</label>
+                        <input asp-for="SoBienBan" class="form-control form-control-sm d-inline w-50" placeholder="Mã biên bản" />
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-2">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold">- Họ tên khách hàng:</label>
+                        <input asp-for="HoTenKhachHang" class="form-control border-bottom-only" placeholder="........................................................................................" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">- Số điện thoại:</label>
+                        <input asp-for="SoDienThoai" class="form-control border-bottom-only" placeholder="..................................." />
+                    </div>
+
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label fw-bold">- Tên sản phẩm lỗi (Mã SP):</label>
+                        <input asp-for="MaSanPham" class="form-control border-bottom-only" placeholder="Nhập mã sản phẩm lỗi hệ thống sẽ tự đối chiếu..." />
+                    </div>
+
+                    <div class="col-md-6 mt-3">
+                        <label class="form-label fw-bold">- Số Seri sản phẩm:</label>
+                        <input asp-for="SoSeri" class="form-control border-bottom-only" placeholder=".................." />
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <label class="form-label fw-bold">Mã hóa đơn mua:</label>
+                        <input asp-for="MaHoaDon" class="form-control border-bottom-only" placeholder=".........................................." />
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <label class="form-label fw-bold">- Tình trạng hư hỏng thực tế khi nhận:</label>
+                        <textarea asp-for="TinhTrangHuHong" class="form-control border-bottom-only" rows="2" placeholder=".........................................................................................................................."></textarea>
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <label class="form-label fw-bold">- Phụ kiện đi kèm (nếu có):</label>
+                        <input asp-for="PhuKienKemTheo" class="form-control border-bottom-only" placeholder=".............................................................................." />
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <p class="fst-italic text-muted small">Biên bản được lập làm căn cứ chuyển giao thông tin hệ thống.</p>
+                </div>
+
+                <div class="row text-center mt-4">
+                    <div class="col-6">
+                        <p class="fw-bold m-0">Khách hàng</p>
+                        <small class="text-muted d-block mb-5">(Ký, ghi rõ họ tên)</small>
+                    </div>
+                    <div class="col-6">
+                        <p class="fw-bold m-0">Thu ngân tiếp nhận</p>
+                        <small class="text-muted d-block mb-4">(Ký, ghi rõ họ tên)</small>
+                        <input asp-for="ThuNganTiepNhan" type="text" class="form-control form-control-sm w-50 mx-auto text-center border-bottom-only" placeholder="Mã Thu Ngân" />
+                    </div>
+                </div>
+
+                <div class="text-center mt-5 border-top pt-3">
+                    <button type="submit" class="btn btn-primary px-5">Lập Biên Bản</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">Hủy bỏ</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-bottom-only {
+        border: none;
+        border-bottom: 1px dashed #6c757d;
+        border-radius: 0;
+        background-color: transparent;
+        box-shadow: none !important;
+    }
+
+        .border-bottom-only:focus {
+            border-bottom: 2px solid #0d6efd;
+        }
+</style>

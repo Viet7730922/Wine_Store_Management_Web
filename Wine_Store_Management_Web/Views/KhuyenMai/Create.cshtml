@@ -1,0 +1,89 @@
+﻿@model Wine_Store_Management_Web.Models.KhuyenMai
+
+@{
+    ViewData["Title"] = "QLCH_BM2 - Thiết Lập Khuyến Mãi";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-danger">
+        <div class="card-header bg-danger text-white text-center">
+            <h4 class="card-title mb-0">PHIẾU THIẾT LẬP CHƯƠNG TRÌNH KHUYẾN MÃI</h4>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Mã chương trình ưu đãi:</label>
+                        <input asp-for="MaChuongTrinh" class="form-control" placeholder="VD: KM_TET2026" />
+                        <span asp-validation-for="MaChuongTrinh" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold">Tên chương trình/Sự kiện:</label>
+                        <input asp-for="TenChuongTrinh" class="form-control" placeholder="Nhập tên sự kiện..." />
+                        <span asp-validation-for="TenChuongTrinh" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Hình thức áp dụng:</label>
+                        <div class="mt-2 p-2 border rounded bg-light">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="HinhThucApDung" value="Giảm theo % hóa đơn" id="hinhThuc1" checked>
+                                <label class="form-check-label" for="hinhThuc1">Giảm theo % hóa đơn</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="HinhThucApDung" value="Tặng quà đi kèm" id="hinhThuc2">
+                                <label class="form-check-label" for="hinhThuc2">Tặng quà đi kèm</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="HinhThucApDung" value="Đồng giá" id="hinhThuc3">
+                                <label class="form-check-label" for="hinhThuc3">Đồng giá</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Mức giảm giá / Giá trị quà tặng:</label>
+                        <input asp-for="MucGiamGia" class="form-control" placeholder="................................................................................................" />
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Điều kiện áp dụng (Ví dụ: Hóa đơn từ 1 triệu, áp dụng cho khách VIP...):</label>
+                        <textarea asp-for="DieuKienApDung" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Thời gian áp dụng: Từ ngày</label>
+                        <input asp-for="TuNgay" type="date" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Đến ngày:</label>
+                        <input asp-for="DenNgay" type="date" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row mt-5 text-center">
+                    <div class="col-md-6 offset-md-6">
+                        <p class="m-0">Ngày <input asp-for="NgayDuyet" type="date" class="form-control form-control-sm d-inline w-auto border-0 bg-transparent fw-bold" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly /></p>
+                        <p class="fw-bold m-0 mt-2">Người phê duyệt chương trình</p>
+                        <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
+                        <input asp-for="NguoiPheDuyet" class="form-control w-50 mx-auto text-center border-bottom-only" placeholder="Mã NV Quản lý" />
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 border-top pt-3">
+                    <button type="submit" class="btn btn-danger px-5">Phê Duyệt & Lưu</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-bottom-only {
+        border: none;
+        border-bottom: 1px dotted #000;
+        border-radius: 0;
+        background-color: transparent;
+    }
+</style>
