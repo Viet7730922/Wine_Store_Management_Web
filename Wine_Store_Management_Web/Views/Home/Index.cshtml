@@ -16,16 +16,22 @@
                 </div>
                 <div class="card-body d-flex flex-column gap-2">
                     <a asp-controller="HoaDon" asp-action="Create" class="btn btn-outline-primary text-start">
-                        <i class="bi bi-cart-plus"></i> Lập hóa đơn bán hàng (BH_BM1)
+                        <i class="bi bi-cart-plus"></i> BH_BM1 - Lập hóa đơn bán hàng
                     </a>
-                    <a asp-controller="KhachHang" asp-action="Index" class="btn btn-outline-primary text-start">
-                        <i class="bi bi-people"></i> Tra cứu KH thân thiết (BH_BM2)
+                    <a asp-controller="KhachHang" asp-action="TraCuuNhanh" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-search"></i> BH_BM2 - Tra cứu KH thân thiết
                     </a>
                     <a asp-controller="TiepNhanBaoHanh" asp-action="Create" class="btn btn-outline-primary text-start">
-                        <i class="bi bi-tools"></i> Tiếp nhận bảo hành (BH_BM3)
+                        <i class="bi bi-tools"></i> BH_BM3 - Tiếp nhận bảo hành
                     </a>
-                    <a asp-controller="HoaDon" asp-action="Index" class="btn btn-outline-primary text-start">
-                        <i class="bi bi-receipt"></i> Lịch sử đơn hàng / In biên nhận
+                    <a asp-controller="TuChoiBaoHanh" asp-action="Create" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-x-octagon"></i> BH_BM4 - Lập phiếu từ chối BH
+                    </a>
+                    <a asp-controller="PhieuBaoHanhKho" asp-action="Create" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-file-earmark-check"></i> BH_BM5 - Kết xuất Phiếu BH
+                    </a>
+                    <a asp-controller="BienNhanGiaoDich" asp-action="Create" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-printer"></i> BH_BM6 - In biên nhận giao dịch
                     </a>
                 </div>
             </div>
@@ -38,16 +44,20 @@
                 </div>
                 <div class="card-body d-flex flex-column gap-2">
                     <a asp-controller="SanPham" asp-action="Create" class="btn btn-outline-success text-start">
-                        <i class="bi bi-box-seam"></i> Thêm sản phẩm mới (KHO_BM1)
+                        <i class="bi bi-box-seam"></i> KHO_BM1 - Thêm sản phẩm mới
                     </a>
                     <a asp-controller="PhieuNhap" asp-action="Create" class="btn btn-outline-success text-start">
-                        <i class="bi bi-truck"></i> Tạo phiếu nhập kho (KHO_BM2)
+                        <i class="bi bi-truck"></i> KHO_BM2 - Tạo phiếu nhập kho
                     </a>
-                    <a asp-controller="SanPham" asp-action="Index" class="btn btn-outline-success text-start">
-                        <i class="bi bi-search"></i> Tra cứu tồn kho
+                    <a asp-controller="BaoCao" asp-action="ThongKeKho" class="btn btn-outline-success text-start fw-bold">
+                        <i class="bi bi-bar-chart-steps"></i> KHO_BM3 - Báo cáo thống kê kho
                     </a>
                     <a asp-controller="KiemKeKho" asp-action="Create" class="btn btn-outline-success text-start">
-                        <i class="bi bi-clipboard-check"></i> Kiểm kê kho (KHO_BM4)
+                        <i class="bi bi-clipboard-check"></i> KHO_BM4 - Lập phiếu kiểm kê
+                    </a>
+                    <hr />
+                    <a asp-controller="SanPham" asp-action="Index" class="btn btn-success text-start text-white">
+                        <i class="bi bi-list-ul"></i> Tra cứu danh mục tồn kho
                     </a>
                 </div>
             </div>
@@ -59,17 +69,23 @@
                     <h5 class="m-0">QUẢN LÝ CỬA HÀNG</h5>
                 </div>
                 <div class="card-body d-flex flex-column gap-2">
-                    <a asp-controller="NhanVien" asp-action="Index" class="btn btn-outline-danger text-start">
-                        <i class="bi bi-person-badge"></i> Quản lý tài khoản & Phân quyền
+                    <a asp-controller="NhanVien" asp-action="Create" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-person-badge"></i> QLCH_BM1 - Phân quyền tài khoản
                     </a>
                     <a asp-controller="KhuyenMai" asp-action="Create" class="btn btn-outline-danger text-start">
-                        <i class="bi bi-gift"></i> Thiết lập khuyến mãi (QLCH_BM2)
+                        <i class="bi bi-gift"></i> QLCH_BM2 - Thiết lập khuyến mãi
                     </a>
-                    <a asp-controller="BaoCao" asp-action="DoanhThu" class="btn btn-outline-danger text-start">
-                        <i class="bi bi-graph-up-arrow"></i> Báo cáo tổng hợp doanh thu
+                    <a asp-controller="KhachHang" asp-action="TraCuuChiTiet" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-person-lines-fill"></i> QLCH_BM3 - Hồ sơ khách hàng
                     </a>
                     <a asp-controller="LogHeThong" asp-action="Index" class="btn btn-outline-danger text-start">
-                        <i class="bi bi-clock-history"></i> Nhật ký hoạt động nhân viên (QLCH_BM4)
+                        <i class="bi bi-clock-history"></i> QLCH_BM4 - Nhật ký hệ thống
+                    </a>
+                    <a asp-controller="BaoCao" asp-action="DoanhThu" class="btn btn-outline-danger text-start fw-bold">
+                        <i class="bi bi-graph-up-arrow"></i> QLCH_BM5 - Báo cáo doanh thu
+                    </a>
+                    <a asp-controller="BaoCao" asp-action="HieuSuatNhanVien" class="btn btn-outline-danger text-start fw-bold">
+                        <i class="bi bi-award"></i> QLCH_BM6 - Hiệu suất nhân viên
                     </a>
                 </div>
             </div>

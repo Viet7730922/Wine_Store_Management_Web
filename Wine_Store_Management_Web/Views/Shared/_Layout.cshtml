@@ -27,15 +27,19 @@
                                 <i class="bi bi-cart"></i> Bán Hàng & Chăm Sóc
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="banHangDropdown">
-                                <li><h6 class="dropdown-header">Quản lý Hóa Đơn</h6></li>
+                                <li><h6 class="dropdown-header">Nghiệp vụ Bán hàng</h6></li>
                                 <li><a class="dropdown-item" asp-controller="HoaDon" asp-action="Create">Lập Hóa đơn mới (BH_BM1)</a></li>
                                 <li><a class="dropdown-item" asp-controller="HoaDon" asp-action="Index">Lịch sử Hóa đơn</a></li>
+                                <li><a class="dropdown-item" asp-controller="BienNhanGiaoDich" asp-action="Create">In Biên nhận giao dịch (BH_BM6)</a></li>
+
                                 <li><hr class="dropdown-divider"></li>
                                 <li><h6 class="dropdown-header">Khách Hàng & Bảo Hành</h6></li>
                                 <li><a class="dropdown-item" asp-controller="KhachHang" asp-action="TraCuuNhanh">Tra cứu Khách hàng (BH_BM2)</a></li>
                                 <li><a class="dropdown-item" asp-controller="KhachHang" asp-action="Index">Danh sách Khách hàng</a></li>
                                 <li><a class="dropdown-item" asp-controller="TiepNhanBaoHanh" asp-action="Create">Tiếp nhận bảo hành (BH_BM3)</a></li>
-                                <li><a class="dropdown-item" asp-controller="TiepNhanBaoHanh" asp-action="Index">Lịch sử Bảo hành</a></li>
+                                <li><a class="dropdown-item" asp-controller="TuChoiBaoHanh" asp-action="Create">Phiếu từ chối bảo hành (BH_BM4)</a></li>
+                                <li><a class="dropdown-item" asp-controller="PhieuBaoHanhKho" asp-action="Create">Kết xuất Phiếu bảo hành (BH_BM5)</a></li>
+                                <li><a class="dropdown-item" asp-controller="TiepNhanBaoHanh" asp-action="Index">Lịch sử Tiếp nhận Bảo hành</a></li>
                             </ul>
                         </li>
 
@@ -49,6 +53,9 @@
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="PhieuNhap" asp-action="Create">Tạo Phiếu nhập kho (KHO_BM2)</a></li>
                                 <li><a class="dropdown-item" asp-controller="PhieuNhap" asp-action="Index">Lịch sử Nhập kho</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="KiemKeKho" asp-action="Create">Lập phiếu Kiểm kê kho (KHO_BM4)</a></li>
+                                <li><a class="dropdown-item text-primary fw-bold" asp-controller="BaoCao" asp-action="ThongKeKho">Báo cáo Thống kê kho (KHO_BM3)</a></li>
                             </ul>
                         </li>
 
@@ -57,14 +64,18 @@
                                 <i class="bi bi-speedometer2"></i> Quản Trị Hệ Thống
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="quanLyDropdown">
+                                <li><h6 class="dropdown-header">Thiết lập hệ thống</h6></li>
                                 <li><a class="dropdown-item" asp-controller="NhanVien" asp-action="Create">Tạo Tài Khoản (QLCH_BM1)</a></li>
                                 <li><a class="dropdown-item" asp-controller="NhanVien" asp-action="Index">Danh sách Nhân viên</a></li>
-                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="KhuyenMai" asp-action="Create">Thiết lập Khuyến mãi (QLCH_BM2)</a></li>
                                 <li><a class="dropdown-item" asp-controller="KhuyenMai" asp-action="Index">Danh sách Khuyến mãi</a></li>
+
                                 <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Kiểm soát & Báo cáo</h6></li>
                                 <li><a class="dropdown-item" asp-controller="KhachHang" asp-action="TraCuuChiTiet">Hồ sơ khách hàng (QLCH_BM3)</a></li>
-                                <li><a class="dropdown-item" asp-controller="LogHeThong" asp-action="Index">Nhật ký hoạt động (QLCH_BM4)</a></li>
+                                <li><a class="dropdown-item" asp-controller="LogHeThong" asp-action="Index">Nhật ký hệ thống (QLCH_BM4)</a></li>
+                                <li><a class="dropdown-item text-danger fw-bold" asp-controller="BaoCao" asp-action="DoanhThu">Báo cáo Doanh thu (QLCH_BM5)</a></li>
+                                <li><a class="dropdown-item text-info fw-bold" asp-controller="BaoCao" asp-action="HieuSuatNhanVien">Báo cáo Hiệu suất NV (QLCH_BM6)</a></li>
                             </ul>
                         </li>
 
