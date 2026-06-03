@@ -1,0 +1,98 @@
+﻿@model Wine_Store_Management_Web.Models.SanPham
+
+@{
+    ViewData["Title"] = "KHO_BM1 - Phiếu Thêm Sản Phẩm Mới";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h3 class="card-title mb-0">PHIẾU THÊM SẢN PHẨM MỚI</h3>
+            <small>Mã biểu mẫu: KHO_BM1</small>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label asp-for="MaSanPham" class="form-label font-weight-bold">Mã sản phẩm:</label>
+                        <input asp-for="MaSanPham" class="form-control" placeholder="Nhập mã SP..." />
+                        <span asp-validation-for="MaSanPham" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label asp-for="TenSanPham" class="form-label font-weight-bold">Tên sản phẩm:</label>
+                        <input asp-for="TenSanPham" class="form-control" placeholder="Nhập tên sản phẩm rượu..." />
+                        <span asp-validation-for="TenSanPham" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="LoaiSanPham" class="form-label font-weight-bold">Loại sản phẩm:</label>
+                        <input asp-for="LoaiSanPham" class="form-control" placeholder="Ví dụ: Vang Đỏ, Chivas..." />
+                        <span asp-validation-for="LoaiSanPham" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="HangSanXuat" class="form-label font-weight-bold">Hãng sản xuất:</label>
+                        <input asp-for="HangSanXuat" class="form-control" placeholder="Nhập hãng sản xuất..." />
+                        <span asp-validation-for="HangSanXuat" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="XuatXu" class="form-label font-weight-bold">Xuất xứ:</label>
+                        <input asp-for="XuatXu" class="form-control" placeholder="Ví dụ: Pháp, Ý, Scotland..." />
+                        <span asp-validation-for="XuatXu" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="DonViTinh" class="form-label font-weight-bold">Đơn vị tính:</label>
+                        <input asp-for="DonViTinh" class="form-control" placeholder="Chai, Thùng..." />
+                        <span asp-validation-for="DonViTinh" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="GiaNhap" class="form-label font-weight-bold">Giá nhập (VNĐ):</label>
+                        <input asp-for="GiaNhap" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="GiaNhap" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="GiaBanDeXuat" class="form-label font-weight-bold">Giá bán đề xuất (VNĐ):</label>
+                        <input asp-for="GiaBanDeXuat" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="GiaBanDeXuat" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="ThoiHanBaoHanh" class="form-label font-weight-bold">Thời hạn bảo hành (Tháng):</label>
+                        <input asp-for="ThoiHanBaoHanh" type="number" class="form-control" placeholder="Số tháng..." />
+                        <span asp-validation-for="ThoiHanBaoHanh" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="NguoiLapPhieu" class="form-label font-weight-bold">Người lập phiếu (Mã NV):</label>
+                        <input asp-for="NguoiLapPhieu" class="form-control" value="@User.Identity?.Name" />
+                        <span asp-validation-for="NguoiLapPhieu" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="NgayTao" class="form-label font-weight-bold">Ngày tạo:</label>
+                        <input asp-for="NgayTao" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="NgayTao" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="MoTa" class="form-label font-weight-bold">Mô tả sản phẩm:</label>
+                        <textarea asp-for="MoTa" class="form-control" rows="3" placeholder="Nhập đặc điểm chi tiết sản phẩm..."></textarea>
+                        <span asp-validation-for="MoTa" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success px-4 me-2">Lưu sản phẩm</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">Hủy bỏ</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

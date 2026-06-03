@@ -1,8 +1,78 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang Chủ - Chilliquer";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">HỆ THỐNG QUẢN LÝ CỬA HÀNG RƯỢU CHILLIQUER</h1>
+        <p class="lead text-muted">138 Mai Xuân Thưởng, Nha Trang, Khánh Hòa</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="m-0">BỘ PHẬN THU NGÂN</h5>
+                </div>
+                <div class="card-body d-flex flex-column gap-2">
+                    <a asp-controller="HoaDon" asp-action="Create" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-cart-plus"></i> Lập hóa đơn bán hàng (BH_BM1)
+                    </a>
+                    <a asp-controller="KhachHang" asp-action="Index" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-people"></i> Tra cứu KH thân thiết (BH_BM2)
+                    </a>
+                    <a asp-controller="TiepNhanBaoHanh" asp-action="Create" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-tools"></i> Tiếp nhận bảo hành (BH_BM3)
+                    </a>
+                    <a asp-controller="HoaDon" asp-action="Index" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-receipt"></i> Lịch sử đơn hàng / In biên nhận
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-success">
+                <div class="card-header bg-success text-white text-center">
+                    <h5 class="m-0">BỘ PHẬN KHO</h5>
+                </div>
+                <div class="card-body d-flex flex-column gap-2">
+                    <a asp-controller="SanPham" asp-action="Create" class="btn btn-outline-success text-start">
+                        <i class="bi bi-box-seam"></i> Thêm sản phẩm mới (KHO_BM1)
+                    </a>
+                    <a asp-controller="PhieuNhap" asp-action="Create" class="btn btn-outline-success text-start">
+                        <i class="bi bi-truck"></i> Tạo phiếu nhập kho (KHO_BM2)
+                    </a>
+                    <a asp-controller="SanPham" asp-action="Index" class="btn btn-outline-success text-start">
+                        <i class="bi bi-search"></i> Tra cứu tồn kho
+                    </a>
+                    <a asp-controller="KiemKeKho" asp-action="Create" class="btn btn-outline-success text-start">
+                        <i class="bi bi-clipboard-check"></i> Kiểm kê kho (KHO_BM4)
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-danger">
+                <div class="card-header bg-danger text-white text-center">
+                    <h5 class="m-0">QUẢN LÝ CỬA HÀNG</h5>
+                </div>
+                <div class="card-body d-flex flex-column gap-2">
+                    <a asp-controller="NhanVien" asp-action="Index" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-person-badge"></i> Quản lý tài khoản & Phân quyền
+                    </a>
+                    <a asp-controller="KhuyenMai" asp-action="Create" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-gift"></i> Thiết lập khuyến mãi (QLCH_BM2)
+                    </a>
+                    <a asp-controller="BaoCao" asp-action="DoanhThu" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-graph-up-arrow"></i> Báo cáo tổng hợp doanh thu
+                    </a>
+                    <a asp-controller="LogHeThong" asp-action="Index" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-clock-history"></i> Nhật ký hoạt động nhân viên
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Wine_Store_Management_Web.Models; 
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Data 
 {
     public class ApplicationDbContext : DbContext
     {
@@ -25,7 +26,7 @@ namespace Wine_Store_Management_Web.Models
         public DbSet<ChiTietKiemKe> ChiTietKiemKes { get; set; } = null!;
         public DbSet<LogHeThong> LogHeThongs { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelCreatingBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder) // Sửa từ ModelCreatingBuilder thành ModelBuilder
         {
             base.OnModelCreating(modelBuilder);
 
@@ -46,7 +47,7 @@ namespace Wine_Store_Management_Web.Models
             modelBuilder.Entity<ChiTietKiemKe>().ToTable("CHITIET_KIEMKE");
             modelBuilder.Entity<LogHeThong>().ToTable("LOG_HE_THONG");
 
-            // Cấu hình Khóa phức hợp (Composite Primary Keys) cho các bảng trung gian
+            // Cấu hình Khóa phức hợp (Composite Primary Keys)
             modelBuilder.Entity<ChiTietPhieuNhap>()
                 .HasKey(c => new { c.MaPhieuNhap, c.MaSanPham });
 
