@@ -21,6 +21,7 @@
                         <th>Khách Hàng (Mã Thẻ)</th>
                         <th>Thanh Toán</th>
                         <th>Thu Ngân</th>
+                        <th>Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,11 +33,14 @@
                             <td class="text-start">@item.HoTenNguoiMua</td>
                             <td>@(item.MaKhachHang ?? "Khách lẻ")</td>
                             <td>
-                                <span class="badge @(item.HinhThucThanhToan == "Tiền mặt" ? "bg-warning text-dark" : "bg-info text-dark")">
-                                    @item.HinhThucThanhToan
-                                </span>
+                                <span class="badge @(item.HinhThucThanhToan == "Tiền mặt" ? "bg-warning text-dark" : "bg-info text-dark")">@item.HinhThucThanhToan</span>
                             </td>
                             <td>@item.ThuNgan</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.SoHoaDon" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-eye"></i> Chi tiết
+                                </a>
+                            </td>
                         </tr>
                     }
                 </tbody>
