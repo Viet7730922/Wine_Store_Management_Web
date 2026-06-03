@@ -65,5 +65,8 @@ namespace Wine_Store_Management_Web.Models
 
         // Thuộc tính điều hướng trỏ tới danh sách chi tiết của hóa đơn
         public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
+
+        [NotMapped]
+        public int DiemTichLuySuDung { get; set; }
     }
 }

@@ -48,19 +48,60 @@
         tinhTongHoaDon();
     }
 
+    // Bắt sự kiện khi Thu ngân gõ/chọn Mã Khuyến Mãi thì tính lại tiền luôn
+    $(document).on('input', '#MaKhuyenMai', function () {
+        tinhTongHoaDon();
+    });
+
     // =========================================================
-    // TÍNH TỔNG TIỀN VÀ GỌI HÀM ĐỌC SỐ THÀNH CHỮ
+    // TÍNH TỔNG TIỀN (CHỈ TRỪ KHUYẾN MÃI) VÀ ĐỌC CHỮ
     // =========================================================
     function tinhTongHoaDon() {
         var tongGiaTri = 0;
+
+        // 1. Cộng tổng tiền hàng gốc
         $('.sp-thanhtien').each(function () {
             tongGiaTri += parseFloat($(this).val()) || 0;
         });
 
-        $('#txtTongTien').text(tongGiaTri.toLocaleString('en-US'));
+        // 2. Tính Giảm giá từ Khuyến Mãi (JS đọc từ Datalist)
+        var maKM = $('#MaKhuyenMai').val();
+        var giamGiaKhuyenMai = 0;
 
-        // Gọi hàm đọc chữ và điền vào ô input ẩn/hiện
-        var tienBangChu = DocTienBangChu(tongGiaTri);
+        if (maKM !== "") {
+            var mucGiamStr = "";
+            $('#listKhuyenMai option').each(function () {
+                if ($(this).val() === maKM) {
+                    mucGiamStr = $(this).attr('data-mucgiam');
+                }
+            });
+
+            if (mucGiamStr !== "") {
+                var numberOnly = parseFloat(mucGiamStr.replace(/[^\d.]/g, ''));
+                if (!isNaN(numberOnly)) {
+                    if (mucGiamStr.includes('%')) {
+                        giamGiaKhuyenMai = tongGiaTri * (numberOnly / 100);
+                    } else {
+                        giamGiaKhuyenMai = numberOnly;
+                    }
+                }
+            }
+        }
+
+        // 3. Tính tổng thanh toán cuối cùng (Không trừ điểm tích lũy nữa)
+        var tongThanhToan = tongGiaTri - giamGiaKhuyenMai;
+        if (tongThanhToan < 0) tongThanhToan = 0; // Tránh số âm
+
+        // 4. Hiển thị số tiền lên màn hình (Có gạch ngang nếu được giảm giá)
+        if (giamGiaKhuyenMai > 0) {
+            $('#txtTongTienGoc').text(tongGiaTri.toLocaleString('en-US')).removeClass('d-none');
+        } else {
+            $('#txtTongTienGoc').addClass('d-none');
+        }
+        $('#txtTongTien').text(tongThanhToan.toLocaleString('en-US'));
+
+        // 5. Dịch số tiền cuối cùng thành chữ gán vào ô Input ẩn
+        var tienBangChu = DocTienBangChu(tongThanhToan);
         $('#TongTienVietBangChu').val(tienBangChu);
     }
 

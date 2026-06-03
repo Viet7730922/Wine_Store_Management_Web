@@ -71,8 +71,17 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Mã khuyến mãi áp dụng:</label>
-                        <input asp-for="MaKhuyenMai" class="form-control" placeholder="Nhập mã ưu đãi" />
-                    </div>
+                        <input asp-for="MaKhuyenMai" id="MaKhuyenMai" class="form-control" list="listKhuyenMai" placeholder="Nhập/Chọn mã ưu đãi" autocomplete="off" />
+
+                        <datalist id="listKhuyenMai">
+                            @if (ViewBag.KhuyenMais != null)
+                            {
+                                foreach (var km in ViewBag.KhuyenMais)
+                                {
+                                    <option value="@km.MaChuongTrinh" data-mucgiam="@km.MucGiamGia">Tên: @km.TenChuongTrinh</option>
+                                }
+                            }
+                        </datalist>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
@@ -121,8 +130,12 @@
                 </table>
 
                 <div class="row justify-content-end mb-4">
-                    <div class="col-md-6 text-end">
-                        <p class="fw-bold fs-5 m-0">Cộng tiền hàng hóa: <span class="text-danger" id="txtTongTien">0.00</span> VNĐ</p>
+                    <div class="col-md-7 text-end">
+                        <p class="fw-bold fs-5 m-0">
+                            Cộng tiền thanh toán:
+                            <del class="text-muted fw-normal fs-6 me-2 d-none" id="txtTongTienGoc">0.00</del>
+                            <span class="text-danger" id="txtTongTien">0.00</span> VNĐ
+                        </p>
                     </div>
                 </div>
 

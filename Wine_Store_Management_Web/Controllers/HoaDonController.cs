@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Wine_Store_Management_Web.Data;
 using Wine_Store_Management_Web.Models;
 
@@ -19,15 +23,57 @@ namespace Wine_Store_Management_Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            // Lấy danh sách Khách hàng
+            // 1. Nạp dữ liệu các danh sách ra View
             ViewBag.KhachHangs = _context.KhachHangs.ToList();
+            ViewBag.SanPhams = _context.SanPhams.Where(sp => sp.SoLuongTon > 0).ToList();
+            ViewBag.KhuyenMais = _context.KhuyenMais.ToList();
 
-            // Lấy danh sách Sản phẩm còn Tồn Kho > 0
-            ViewBag.SanPhams = _context.SanPhams
-                .Where(sp => sp.SoLuongTon > 0)
+            // =====================================================================
+            // 2. THUẬT TOÁN: TỰ ĐỘNG ĐIỀN SỐ HÓA ĐƠN (Lấp đầy khoảng trống)
+            // =====================================================================
+
+            // Lấy toàn bộ mã hóa đơn bắt đầu bằng chữ "HD" trong DB
+            var danhSachMaHD = _context.HoaDons
+                .Where(h => h.SoHoaDon.StartsWith("HD"))
+                .Select(h => h.SoHoaDon)
                 .ToList();
 
-            return View();
+            int soMoi = 1; // Mặc định bắt đầu từ 1 nếu chưa có Hóa đơn nào
+
+            if (danhSachMaHD.Any())
+            {
+                // Bóc tách chữ "HD" (Lấy từ ký tự thứ 2 trở đi), chuyển thành số và sắp xếp tăng dần
+                var cacSoHienTai = danhSachMaHD
+                    .Select(m => {
+                        int.TryParse(m.Substring(2), out int so);
+                        return so;
+                    })
+                    .Where(s => s > 0)
+                    .OrderBy(s => s)
+                    .ToList();
+
+                // Dò tìm số nhỏ nhất bị khuyết trong dãy (Ví dụ: có 1, 3, 4 -> sẽ lấy số 2)
+                for (int i = 1; i <= cacSoHienTai.Count + 1; i++)
+                {
+                    if (!cacSoHienTai.Contains(i))
+                    {
+                        soMoi = i;
+                        break;
+                    }
+                }
+            }
+
+            // Định dạng lại thành chuỗi (VD: soMoi = 2 -> ToString("D2") sẽ biến thành "02" -> "HD02")
+            string maHoaDonTuDong = "HD" + soMoi.ToString("D2");
+
+            // 3. Khởi tạo sẵn Model ném ra View để nó tự điền vào thẻ <input>
+            var hoaDon = new HoaDon
+            {
+                SoHoaDon = maHoaDonTuDong,
+                NgayHoaDon = DateTime.Now // Tiện thể tự điền luôn ngày hôm nay
+            };
+
+            return View(hoaDon);
         }
 
         // POST: HoaDon/Create
@@ -36,9 +82,6 @@ namespace Wine_Store_Management_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(HoaDon hoaDon, List<ChiTietHoaDon> ChiTietHoaDons)
         {
-            // =========================================================================
-            // FIX BUG VALIDATION: Xóa triệt để các bắt lỗi ngầm của Khóa ngoại và Navigation
-            // =========================================================================
             ModelState.Remove("ThuNgan");
             ModelState.Remove("KhachHang");
             ModelState.Remove("KhuyenMai");
@@ -74,13 +117,13 @@ namespace Wine_Store_Management_Web.Controllers
 
                     decimal tongTienHang = 0; // Tiền gốc (Đơn giá * Số lượng)
 
-                    // FIX BUG TRACKING: Xóa dữ liệu dư thừa do Model Binder tạo ra
+                    // Xóa dữ liệu dư thừa do Model Binder tạo ra
                     if (hoaDon.ChiTietHoaDons != null && hoaDon.ChiTietHoaDons.Any())
                     {
                         hoaDon.ChiTietHoaDons.Clear();
                     }
 
-                    // 2. Thêm Hóa đơn gốc vào trước
+                    // 2. Thêm Hóa đơn gốc vào trước để lấy khóa chính
                     _context.HoaDons.Add(hoaDon);
                     await _context.SaveChangesAsync();
 
@@ -105,48 +148,50 @@ namespace Wine_Store_Management_Web.Controllers
                             return View(hoaDon);
                         }
 
-                        // Trừ tồn kho
+                        // Trừ tồn kho (Cơ chế D4)
                         sanPham.SoLuongTon -= chiTiet.SoLuong;
                         _context.Update(sanPham);
 
                         tongTienHang += (chiTiet.SoLuong * chiTiet.DonGia);
                     }
 
-                    // TÍNH TOÁN GIẢM GIÁ (Dựa trên Mã Khuyến Mãi nếu có)
-                    decimal giamGia = 0;
+                    decimal giamGiaKhuyenMai = 0;
                     if (!string.IsNullOrEmpty(hoaDon.MaKhuyenMai))
                     {
                         var km = await _context.KhuyenMais.FindAsync(hoaDon.MaKhuyenMai);
                         if (km != null && !string.IsNullOrEmpty(km.MucGiamGia))
                         {
-                            // Trích xuất con số từ chuỗi (VD: "Giảm 10%" -> 10)
                             string numberOnly = new string(km.MucGiamGia.Where(char.IsDigit).ToArray());
                             if (decimal.TryParse(numberOnly, out decimal mucGiam))
                             {
-                                // Nếu chuỗi có dấu % thì giảm theo phần trăm, ngược lại giảm tiền mặt
-                                if (km.MucGiamGia.Contains("%"))
-                                    giamGia = tongTienHang * (mucGiam / 100);
-                                else
-                                    giamGia = mucGiam;
+                                giamGiaKhuyenMai = km.MucGiamGia.Contains("%") ? tongTienHang * (mucGiam / 100) : mucGiam;
                             }
                         }
                     }
 
-                    // Công thức tính giá: Tổng tiền = (Đơn giá * Số lượng) - Giảm giá
-                    decimal tongThanhToan = tongTienHang - giamGia;
+
+                    // Tổng tiền = (Đơn giá * Số lượng) - Giảm giá KM (Không dùng điểm tích lũy nữa)
+                    decimal tongThanhToan = tongTienHang - giamGiaKhuyenMai;
                     if (tongThanhToan < 0) tongThanhToan = 0;
 
-                    // 4. Cộng điểm tích lũy (Tổng tiền thanh toán / 500, làm tròn xuống)
+                    // XỬ LÝ CỘNG ĐIỂM MỚI (Tỷ lệ: 5000 VNĐ = 1 Điểm)
                     if (!string.IsNullOrEmpty(hoaDon.MaKhachHang))
                     {
                         var khachHang = await _context.KhachHangs.FindAsync(hoaDon.MaKhachHang);
                         if (khachHang != null)
                         {
-                            int diemTichLuyMoi = (int)Math.Floor(tongThanhToan / 500);
+                            // Tỷ lệ mới: Lấy tổng thanh toán chia cho 5000
+                            int diemTichLuyMoi = (int)Math.Floor(tongThanhToan / 5000);
                             khachHang.DiemTichLuy += diemTichLuyMoi;
                             _context.Update(khachHang);
                         }
                     }
+
+                    // Cập nhật trạng thái vào ghi chú
+                    string trangThaiD4 = "Trạng thái: Đã thanh toán";
+                    hoaDon.GhiChu = string.IsNullOrEmpty(hoaDon.GhiChu) ? trangThaiD4 : hoaDon.GhiChu + " | " + trangThaiD4;
+
+                    _context.HoaDons.Update(hoaDon);
 
                     // Lưu toàn bộ các thay đổi
                     await _context.SaveChangesAsync();
@@ -177,6 +222,7 @@ namespace Wine_Store_Management_Web.Controllers
             ViewBag.SanPhams = _context.SanPhams
                 .Where(sp => sp.SoLuongTon > 0)
                 .ToList();
+            ViewBag.KhuyenMais = _context.KhuyenMais.ToList();
         }
 
         // GET: HoaDon/Index
@@ -191,18 +237,18 @@ namespace Wine_Store_Management_Web.Controllers
         }
 
         // GET: HoaDon/Details/5
-        // Hiển thị chi tiết mẫu in hóa đơn
+        // Hiển thị chi tiết mẫu in hóa đơn (D5)
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             if (string.IsNullOrEmpty(id)) return NotFound();
 
             var hoaDon = await _context.HoaDons
-                .Include(h => h.KhachHang) // Load tên khách hàng
-                .Include(h => h.NhanVienThuNgan) // Load tên nhân viên
-                .Include(h => h.KhuyenMai) // Truy xuất thêm Khuyến mãi
-                .Include(h => h.ChiTietHoaDons) // Load list sản phẩm
-                    .ThenInclude(c => c.SanPham) // Load chi tiết từng sản phẩm
+                .Include(h => h.KhachHang)
+                .Include(h => h.NhanVienThuNgan)
+                .Include(h => h.KhuyenMai)
+                .Include(h => h.ChiTietHoaDons)
+                    .ThenInclude(c => c.SanPham)
                 .FirstOrDefaultAsync(m => m.SoHoaDon == id);
 
             if (hoaDon == null) return NotFound();
