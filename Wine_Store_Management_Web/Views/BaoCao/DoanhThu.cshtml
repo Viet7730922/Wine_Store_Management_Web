@@ -1,0 +1,89 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "QLCH_BM5 - Báo Cáo Doanh Thu";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-danger">
+        <div class="card-body p-5">
+            <h5 class="fw-bold mb-4">Số 138, đường Mai Xuân Thưởng, Phường Nha Trang, Khánh Hòa</h5>
+
+            <h4 class="text-center fw-bold mb-2 text-danger">BÁO CÁO TỔNG HỢP DOANH THU VÀ LỢI NHUẬN</h4>
+            <div class="d-flex justify-content-between mb-4">
+                <p class="m-0 fw-bold">Mã báo cáo: BCDT_@DateTime.Now.ToString("yyyyMMdd")</p>
+                <p class="m-0">Khoảng thời gian theo dõi: Từ ngày @ViewBag.TuNgay đến ngày @ViewBag.DenNgay</p>
+            </div>
+
+            <form method="get" class="mb-4 d-flex justify-content-end d-print-none">
+                <div class="input-group w-50">
+                    <input type="date" name="tuNgay" class="form-control" value="@ViewBag.TuNgay_Input" required />
+                    <span class="input-group-text">-</span>
+                    <input type="date" name="denNgay" class="form-control" value="@ViewBag.DenNgay_Input" required />
+                    <button type="submit" class="btn btn-danger">Lọc dữ liệu</button>
+                </div>
+            </form>
+
+            <h6 class="fw-bold text-decoration-underline mb-3">BẢNG SỐ LIỆU TỔNG HỢP THEO NGÀY:</h6>
+            <table class="table table-bordered align-middle text-center">
+                <thead class="table-danger">
+                    <tr>
+                        <th style="width: 5%">STT</th>
+                        <th>Ngày/Tháng</th>
+                        <th>Số đơn hàng</th>
+                        <th>Tổng Doanh thu(VNĐ)</th>
+                        <th>Tổng chi phí vốn (VNĐ)</th>
+                        <th>Lợi thuận(VNĐ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        int stt = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@stt</td>
+                                <td>@item.NgayThang</td>
+                                <td>@item.SoDonHang</td>
+                                <td class="text-end">@item.TongDoanhThu.ToString("N2")</td>
+                                <td class="text-end">@item.TongChiPhiVon.ToString("N2")</td>
+                                <td class="text-end fw-bold text-success">@item.LoiNhuan.ToString("N2")</td>
+                            </tr>
+                            stt++;
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <div class="mt-4 p-3 bg-light border">
+                <h6 class="fw-bold text-danger text-decoration-underline">TỔNG KẾT CUỐI KỲ:</h6>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="fw-bold">Tổng số đơn hàng bán ra:</span>
+                    <span class="border-bottom-only w-50 text-end pe-2">@ViewBag.TongDonHang</span> <span>đơn</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="fw-bold">Tổng doanh thu:</span>
+                    <span class="border-bottom-only w-50 text-end pe-2">@ViewBag.TongDoanhThu</span> <span>VNĐ</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="fw-bold">Tổng lợi nhuận thực tế:</span>
+                    <span class="border-bottom-only w-50 text-end pe-2 fw-bold text-success">@ViewBag.TongLoiNhuan</span> <span>VNĐ</span>
+                </div>
+            </div>
+
+            <div class="row text-center mt-5">
+                <div class="col-5 offset-7">
+                    <p class="m-0">Ngày @DateTime.Now.Day tháng @DateTime.Now.Month năm @DateTime.Now.Year</p>
+                    <p class="fw-bold m-0 mt-2">Người lập báo cáo</p>
+                    <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
+                    <span class="border-bottom-only w-75 d-inline-block">@User.Identity?.Name</span>
+                </div>
+            </div>
+
+            <div class="text-center mt-4 d-print-none border-top pt-3">
+                <button onclick="window.print()" class="btn btn-outline-danger px-4"><i class="bi bi-printer"></i> In Báo Cáo</button>
+            </div>
+        </div>
+    </div>
+</div>
