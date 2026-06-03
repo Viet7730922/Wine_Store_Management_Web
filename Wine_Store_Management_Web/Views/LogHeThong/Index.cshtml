@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Wine_Store_Management_Web.Models.LogHeThong>
+
+@{
+    ViewData["Title"] = "QLCH_BM4 - Nhật ký hệ thống";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-secondary">
+        <div class="card-body p-4">
+            <h4 class="text-center fw-bold mb-4">PHIẾU TRA CỨU NHẬT KÝ HOẠT ĐỘNG CỦA NHÂN VIÊN</h4>
+
+            <form method="get" class="mb-4 p-3 bg-light border">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="fw-bold">Chọn nhân viên cần tra cứu:</label>
+                        <select name="username" class="form-select" asp-items="ViewBag.UserList">
+                            <option value="">-- Tất cả nhân viên --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="fw-bold d-block">Khoảng thời gian theo dõi:</label>
+                        <div class="d-flex align-items-center">
+                            <span class="me-2">Từ ngày</span>
+                            <input type="date" name="tuNgay" class="form-control w-auto" value="@ViewBag.TuNgay" />
+                            <span class="mx-2">đến ngày</span>
+                            <input type="date" name="denNgay" class="form-control w-auto" value="@ViewBag.DenNgay" />
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button type="submit" class="btn btn-secondary w-100">Lọc dữ liệu</button>
+                    </div>
+                </div>
+            </form>
+
+            <h6 class="fw-bold mb-3">DANH SÁCH HOẠT ĐỘNG GHI NHẬN:</h6>
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>Tên tài khoản</th>
+                        <th>Thao tác thực hiện (Đăng nhập/In đơn/Xóa dữ liệu)</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var log in Model)
+                        {
+                            <tr>
+                                <td>@log.ThoiGian.ToString("HH:mm:ss dd/MM/yyyy")</td>
+                                <td class="fw-bold">@log.TenTaiKhoan</td>
+                                <td class="text-start">@log.ThaoTacThucHien</td>
+                                <td>
+                                    <span class="badge @(log.TrangThai == "Thành công" ? "bg-success" : "bg-danger")">
+                                        @log.TrangThai
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-muted py-3">Không có hoạt động nào trong khoảng thời gian này</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="row text-center mt-5">
+                <div class="col-4 offset-8">
+                    <p class="m-0">Ngày @DateTime.Now.Day tháng @DateTime.Now.Month năm @DateTime.Now.Year</p>
+                    <p class="fw-bold m-0 mt-2">Người kiểm tra</p>
+                    <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
+                    <span class="border-bottom-only w-75 d-inline-block">@User.Identity?.Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

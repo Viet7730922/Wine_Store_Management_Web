@@ -1,0 +1,95 @@
+﻿@model Wine_Store_Management_Web.Models.KhachHang
+
+@{
+    ViewData["Title"] = "BH_BM2 - Tra Cứu Khách Hàng";
+    var transactions = ViewBag.RecentTransactions as List<Wine_Store_Management_Web.Models.HoaDon>;
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-info">
+        <div class="card-body p-4">
+            <h4 class="text-center fw-bold mb-1">PHIẾU TRA CỨU KHÁCH HÀNG THÂN THIẾT</h4>
+            <p class="text-center mb-4">Thời gian tra cứu: @DateTime.Now.ToString("HH : mm 'Ngày' dd/MM/yyyy")</p>
+
+            <form asp-action="TraCuuNhanh" method="get" class="mb-4">
+                <div class="input-group w-75 mx-auto">
+                    <span class="input-group-text fw-bold bg-light">Từ khóa tìm kiếm (SĐT/Mã KH):</span>
+                    <input type="text" name="keyword" class="form-control" placeholder="Nhập số điện thoại hoặc mã KH..." value="@ViewBag.Keyword" required />
+                    <button type="submit" class="btn btn-info text-white">Tra cứu</button>
+                </div>
+            </form>
+
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-danger text-center">@ViewBag.Message</div>
+            }
+
+            @if (Model != null)
+            {
+                <h6 class="fw-bold text-decoration-underline mb-3">HỆ THỐNG PHẢN HỒI THÔNG TIN:</h6>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="fw-bold">- Mã khách hàng:</label> <span class="border-bottom-only">@Model.MaKhachHang</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="fw-bold">- Họ và tên:</label> <span class="border-bottom-only">@Model.HoTen</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="fw-bold">- Ngày đăng ký thẻ:</label> <span class="border-bottom-only">@Model.NgayDangKyThe.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="fw-bold">Hạng thành viên:</label> <span class="border-bottom-only">@Model.HangThanhVien</span>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <label class="fw-bold">- Số điểm tích lũy hiện tại:</label> <span class="border-bottom-only fw-bold text-danger">@Model.DiemTichLuy</span> Điểm
+                        <br />
+                        <span class="fst-italic text-muted">(Giá trị quy đổi khả dụng: @((Model.DiemTichLuy * 500).ToString("N0")) VNĐ)</span>
+                    </div>
+                </div>
+
+                <p class="fw-bold mt-4">* Lịch sử 3 giao dịch gần nhất của khách hàng:</p>
+                <table class="table table-bordered text-center align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Số Hóa Đơn</th>
+                            <th>Tổng tiền (VNĐ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (transactions != null && transactions.Any())
+                        {
+                            foreach (var hd in transactions)
+                            {
+                                <tr>
+                                    <td>@hd.NgayHoaDon.ToString("dd/MM/yyyy")</td>
+                                    <td>@hd.SoHoaDon</td>
+                                    <td>Tự động tính từ Detail...</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" class="text-muted">Chưa có giao dịch nào</td></tr>
+                        }
+                    </tbody>
+                </table>
+
+                <hr class="mt-4 border-2" />
+                <div class="text-end">
+                    <label class="fw-bold">Thu ngân thực hiện tra cứu:</label>
+                    <input type="text" class="form-control d-inline w-25 border-bottom-only" value="@User.Identity?.Name" readonly />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-bottom-only {
+        display: inline-block;
+        min-width: 150px;
+        border-bottom: 1px dotted #000;
+        font-weight: 500;
+    }
+</style>

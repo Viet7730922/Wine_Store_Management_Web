@@ -1,0 +1,98 @@
+﻿@model Wine_Store_Management_Web.Models.KhachHang
+
+@{
+    ViewData["Title"] = "QLCH_BM3 - Hồ Sơ Khách Hàng";
+    var transactions = ViewBag.RecentTransactions as List<Wine_Store_Management_Web.Models.HoaDon>;
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-danger">
+        <div class="card-body p-4">
+            <h4 class="text-center fw-bold mb-4">PHIẾU TRA CỨU THÔNG TIN VÀ LỊCH SỬ</h4>
+
+            <form asp-action="TraCuuChiTiet" method="get" class="mb-4">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <label class="fw-bold">Tiêu chí tìm kiếm (Mã KH / Số điện thoại):</label>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" name="keyword" class="form-control" value="@ViewBag.Keyword" required />
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-danger">Tìm kiếm</button>
+                    </div>
+                </div>
+            </form>
+
+            @if (Model != null)
+            {
+                <div class="bg-light p-3 border rounded">
+                    <h6 class="fw-bold mb-3">KẾT QUẢ HIỂN THỊ TỪ HỆ THỐNG:</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Mã khách hàng:</label> <span class="fw-bold border-bottom-only">@Model.MaKhachHang</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Họ và tên:</label> <span class="fw-bold border-bottom-only">@Model.HoTen</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Số điện thoại:</label> <span class="fw-bold border-bottom-only">@Model.SoDienThoai</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Email:</label> <span class="fw-bold border-bottom-only">@(Model.Email ?? "Trống")</span>
+                        </div>
+
+                        <div class="col-12 mt-3 d-flex align-items-center">
+                            <label class="me-3">Hạng thành viên:</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked="@(Model.HangThanhVien == "Đồng")" disabled> <label>Đồng</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked="@(Model.HangThanhVien == "Bạc")" disabled> <label>Bạc</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked="@(Model.HangThanhVien == "Vàng")" disabled> <label>Vàng</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked="@(Model.HangThanhVien == "Kim cương")" disabled> <label>Kim cương</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <label>Tổng điểm tích lũy hiện tại:</label> <span class="fw-bold border-bottom-only text-danger">@Model.DiemTichLuy</span>
+                        </div>
+                    </div>
+
+                    <p class="fw-bold mt-4 mb-2">Lịch sử giao dịch gần nhất (Mã hóa đơn - Ngày mua - Tổng tiền):</p>
+                    <ul class="list-unstyled">
+                        @{
+                            int count = 1;
+                            if (transactions != null && transactions.Any())
+                            {
+                                foreach (var hd in transactions)
+                                {
+                                    <li class="mb-2">@count: <span class="border-bottom-only w-75">@hd.SoHoaDon - @hd.NgayHoaDon.ToString("dd/MM/yyyy") - (Xem chi tiết ở Hóa đơn)</span></li>
+                                    count++;
+                                }
+                            }
+                            // Bù dòng trống nếu không đủ 3 giao dịch như biểu mẫu
+                            for (int i = count; i <= 3; i++)
+                            {
+                                <li class="mb-2">@i: <span class="border-bottom-only w-75">.......................................................................................................</span></li>
+                            }
+                        }
+                    </ul>
+                </div>
+
+                <div class="row text-center mt-5">
+                    <div class="col-6 offset-6">
+                        <p class="m-0">Ngày @DateTime.Now.Day tháng @DateTime.Now.Month năm @DateTime.Now.Year</p>
+                        <p class="fw-bold m-0 mt-2">Người tra cứu</p>
+                        <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
+                        <span class="border-bottom-only w-50">@User.Identity?.Name</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
