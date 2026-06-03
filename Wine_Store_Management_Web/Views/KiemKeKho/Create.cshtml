@@ -1,0 +1,58 @@
+﻿@model Wine_Store_Management_Web.Models.KiemKeKho
+
+@{
+    ViewData["Title"] = "KHO_BM4 - Kiểm Kê Kho";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-success">
+        <div class="card-body p-4">
+            <h4 class="text-center fw-bold text-success mb-2">Kiểm kê kho</h4>
+
+            <form asp-action="Create" method="post">
+                <div class="row mb-4">
+                    <div class="col-md-6 offset-md-3 text-center">
+                        <label class="fw-bold">Thời gian kiểm kê:</label>
+                        <input asp-for="ThoiGianKiemKe" type="date" class="form-control d-inline w-50 border-bottom-only" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+
+                <input type="hidden" asp-for="MaPhieuKiemKe" value="KK_@DateTime.Now.ToString("yyyyMMddHHmmss")" />
+
+                <table class="table table-bordered table-hover align-middle text-center" id="kiemKeTable">
+                    <thead class="table-success">
+                        <tr>
+                            <th style="width: 5%">STT</th>
+                            <th style="width: 15%">Mã sản phẩm</th>
+                            <th>Tên sản phẩm</th>
+                            <th style="width: 15%">Tồn kho hiện tại (Thực tế)</th>
+                            <th style="width: 15%">Tồn kho hệ thống</th>
+                            <th style="width: 15%">Chênh lệch</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><input name="ChiTietKiemKes[0].MaSanPham" class="form-control form-control-sm text-center" required /></td>
+                            <td><input class="form-control form-control-sm" readonly placeholder="Tự động load..." /></td>
+                            <td><input name="ChiTietKiemKes[0].TonKhoThucTe" type="number" class="form-control form-control-sm text-center txtThucTe" required /></td>
+                            <td><input name="ChiTietKiemKes[0].TonKhoHeThong" type="number" class="form-control form-control-sm text-center txtHeThong" readonly /></td>
+                            <td><input name="ChiTietKiemKes[0].ChenhLech" type="number" class="form-control form-control-sm text-center txtChenhLech fw-bold" readonly /></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row mt-5">
+                    <div class="col-md-5 offset-md-7 text-center">
+                        <label class="fw-bold">Người lập kiểm kê:</label>
+                        <input asp-for="NguoiLapKiemKe" class="form-control border-bottom-only d-inline w-75 mt-2 text-center" placeholder="...................................." value="@User.Identity?.Name" />
+                    </div>
+                </div>
+
+                <div class="text-center mt-5 border-top pt-3">
+                    <button type="submit" class="btn btn-success px-5">Lưu Phiếu Kiểm Kê</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

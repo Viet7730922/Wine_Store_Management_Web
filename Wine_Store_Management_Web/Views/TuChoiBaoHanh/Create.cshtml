@@ -1,0 +1,91 @@
+﻿@model Wine_Store_Management_Web.Models.TuChoiBaoHanh
+
+@{
+    ViewData["Title"] = "BH_BM4 - Phiếu Từ Chối Bảo Hành";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-dark">
+        <div class="card-body p-5">
+            <h4 class="text-center fw-bold mb-4">PHIẾU TỪ CHỐI BẢO HÀNH</h4>
+
+            <form asp-action="Create" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-6 offset-md-6 text-end">
+                        <label class="fw-bold">Ngày lập phiếu:</label>
+                        <input asp-for="NgayLapPhieu" type="date" class="form-control form-control-sm d-inline w-50" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="fw-bold">- Mã KH:</label>
+                        <input asp-for="MaKhachHang" class="form-control border-bottom-only" placeholder="......................................" />
+                    </div>
+                    <div class="col-md-8">
+                        <label class="fw-bold">Họ tên KH:</label>
+                        <input type="text" class="form-control border-bottom-only" placeholder="................................................................" readonly />
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label class="fw-bold">- Mã sản phẩm:</label>
+                        <input asp-for="MaSanPham" class="form-control border-bottom-only" placeholder="..............................." />
+                    </div>
+                    <div class="col-md-8 mt-3">
+                        <label class="fw-bold">Tên sản phẩm:</label>
+                        <input type="text" class="form-control border-bottom-only" placeholder="..................................................................." readonly />
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <label class="fw-bold">- Số seri sản phẩm:</label>
+                        <input asp-for="SoSeri" class="form-control border-bottom-only" placeholder=".............................................................................................." />
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <label class="fw-bold mb-2">Lý do từ chối bảo hành (Thu ngân tích chọn lý do vi phạm):</label>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" asp-for="LyDoTuChoi" value="Sản phẩm hết hạn bảo hành theo quy định hệ thống" id="ld1" checked>
+                            <label class="form-check-label" for="ld1">[ ] Sản phẩm hết hạn bảo hành theo quy định hệ thống.</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" asp-for="LyDoTuChoi" value="Hư hỏng do rơi vỡ / vô nước / lỗi từ phía người dùng" id="ld2">
+                            <label class="form-check-label" for="ld2">[ ] Hư hỏng do rơi vỡ / vô nước / lỗi từ phía người dùng.</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" asp-for="LyDoTuChoi" value="Mất tem niêm phong / không có hóa đơn / mua ngoài hệ thống" id="ld3">
+                            <label class="form-check-label" for="ld3">[ ] Mất tem niêm phong / không có hóa đơn / mua ngoài hệ thống.</label>
+                        </div>
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input me-2" type="radio" asp-for="LyDoTuChoi" value="Khác" id="ld4">
+                            <label class="form-check-label text-nowrap me-2" for="ld4">[ ] Lý do khác:</label>
+                            <input type="text" class="form-control border-bottom-only w-100" placeholder="...................................................................................................." />
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <label class="fw-bold">Bằng chứng đính kèm (hình ảnh/biên bản giám định):</label>
+                        <input asp-for="BangChungDinhKem" class="form-control border-bottom-only" placeholder="......................................." />
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <label class="fw-bold">Người xác nhận từ chối (Thu ngân):</label>
+                        <input asp-for="ThuNganXacNhan" class="form-control d-inline w-25 border-bottom-only" value="@User.Identity?.Name" readonly />
+                    </div>
+                </div>
+
+                <div class="text-center mt-5 border-top pt-3">
+                    <button type="submit" class="btn btn-dark px-5">Lập Phiếu & In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>    .border-bottom-only {
+        border: none;
+        border-bottom: 1px dotted #000;
+        background: transparent;
+        border-radius: 0;
+        outline: none;
+    }</style>
