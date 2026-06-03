@@ -3,45 +3,101 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Wine_Store_Management_Web</title>
+    <title>@ViewData["Title"] - Cửa Hàng Rượu Chilliquer</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Wine_Store_Management_Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Wine_Store_Management_Web</a>
+                <a class="navbar-brand fw-bold text-warning" asp-area="" asp-controller="Home" asp-action="Index">CHILLIQUER</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="banHangDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-cart"></i> Bán Hàng & Chăm Sóc
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="banHangDropdown">
+                                <li><h6 class="dropdown-header">Quản lý Hóa Đơn</h6></li>
+                                <li><a class="dropdown-item" asp-controller="HoaDon" asp-action="Create">Lập Hóa đơn mới (BH_BM1)</a></li>
+                                <li><a class="dropdown-item" asp-controller="HoaDon" asp-action="Index">Lịch sử Hóa đơn</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Khách Hàng & Bảo Hành</h6></li>
+                                <li><a class="dropdown-item" asp-controller="KhachHang" asp-action="TraCuuNhanh">Tra cứu Khách hàng (BH_BM2)</a></li>
+                                <li><a class="dropdown-item" asp-controller="KhachHang" asp-action="Index">Danh sách Khách hàng</a></li>
+                                <li><a class="dropdown-item" asp-controller="TiepNhanBaoHanh" asp-action="Create">Tiếp nhận bảo hành (BH_BM3)</a></li>
+                                <li><a class="dropdown-item" asp-controller="TiepNhanBaoHanh" asp-action="Index">Lịch sử Bảo hành</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="khoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-box-seam"></i> Quản Lý Kho
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="khoDropdown">
+                                <li><a class="dropdown-item" asp-controller="SanPham" asp-action="Create">Thêm SP mới (KHO_BM1)</a></li>
+                                <li><a class="dropdown-item" asp-controller="SanPham" asp-action="Index">Danh sách Sản phẩm & Tồn kho</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="PhieuNhap" asp-action="Create">Tạo Phiếu nhập kho (KHO_BM2)</a></li>
+                                <li><a class="dropdown-item" asp-controller="PhieuNhap" asp-action="Index">Lịch sử Nhập kho</a></li>
+                            </ul>
                         </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="quanLyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-speedometer2"></i> Quản Trị Hệ Thống
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="quanLyDropdown">
+                                <li><a class="dropdown-item" asp-controller="NhanVien" asp-action="Create">Tạo Tài Khoản (QLCH_BM1)</a></li>
+                                <li><a class="dropdown-item" asp-controller="NhanVien" asp-action="Index">Danh sách Nhân viên</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="KhuyenMai" asp-action="Create">Thiết lập Khuyến mãi (QLCH_BM2)</a></li>
+                                <li><a class="dropdown-item" asp-controller="KhuyenMai" asp-action="Index">Danh sách Khuyến mãi</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="KhachHang" asp-action="TraCuuChiTiet">Hồ sơ khách hàng (QLCH_BM3)</a></li>
+                                <li><a class="dropdown-item" asp-controller="LogHeThong" asp-action="Index">Nhật ký hoạt động (QLCH_BM4)</a></li>
+                            </ul>
+                        </li>
+
                     </ul>
+
+                    <span class="navbar-text text-light">
+                        <i class="bi bi-person-circle"></i> Xin chào, Quản trị viên
+                    </span>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mt-3 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Wine_Store_Management_Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer text-muted mt-5 bg-light">
+        <div class="container text-center">
+            &copy; 2026 - Đồ Án Quản Lý Cửa Hàng Rượu Chilliquer - <a asp-area="" asp-controller="Home" asp-action="Privacy">Chính sách bảo mật</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

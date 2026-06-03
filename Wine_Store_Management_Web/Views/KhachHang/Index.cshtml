@@ -1,5 +1,80 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Wine_Store_Management_Web.Models.KhachHang>
+
 @{
+    ViewData["Title"] = "Danh sách Khách Hàng";
 }
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="text-info text-darken fw-bold">DANH SÁCH KHÁCH HÀNG THÂN THIẾT</h3>
+        <a href="#" class="btn btn-info text-white"><i class="bi bi-person-plus"></i> Đăng ký thẻ mới</a>
+    </div>
+
+    <div class="card shadow-sm border-info">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle text-center m-0">
+                    <thead class="table-info">
+                        <tr>
+                            <th>Mã KH</th>
+                            <th>Họ và Tên</th>
+                            <th>Số Điện Thoại</th>
+                            <th>Email</th>
+                            <th>Ngày Đăng Ký</th>
+                            <th>Hạng Thành Viên</th>
+                            <th>Điểm Tích Lũy</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.MaKhachHang</td>
+                                    <td class="text-start">@item.HoTen</td>
+                                    <td>@item.SoDienThoai</td>
+                                    <td>@(item.Email ?? "Trống")</td>
+                                    <td>@item.NgayDangKyThe.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <span class="badge @(
+                                              item.HangThanhVien == "Kim cương" ? "bg-dark" :
+                                              item.HangThanhVien == "Vàng" ? "bg-warning text-dark" :
+                                              item.HangThanhVien == "Bạc" ? "bg-secondary" :
+                                              "bg-danger"
+                                                                                  )">
+                                            @item.HangThanhVien
+                                        </span>
+                                    </td>
+                                    <td class="text-danger fw-bold">@item.DiemTichLuy</td>
+                                    <td>
+                                        <a asp-action="TraCuuChiTiet" asp-route-keyword="@item.MaKhachHang" class="btn btn-sm btn-outline-primary" title="Xem hồ sơ chi tiết">
+                                            <i class="bi bi-person-lines-fill"></i> Hồ sơ
+                                        </a>
+                                        <a asp-action="TraCuuNhanh" asp-route-keyword="@item.MaKhachHang" class="btn btn-sm btn-outline-info" title="Tra cứu nhanh cho Thu ngân">
+                                            <i class="bi bi-search"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-muted py-4">Chưa có dữ liệu khách hàng nào trong hệ thống.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-darken {
+        color: #0dcaf0;
+        filter: brightness(0.7);
+    }
+</style>
