@@ -10,6 +10,9 @@ namespace Wine_Store_Management_Web.Models
         [StringLength(20)]
         public string MaSanPham { get; set; } = null!;
 
+        [StringLength(16, ErrorMessage = "Số Seri không được vượt quá 16 ký tự.")]
+        public string? SoSeri { get; set; }
+
         [Required]
         [StringLength(150)]
         public string TenSanPham { get; set; } = null!;

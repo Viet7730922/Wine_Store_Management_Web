@@ -27,7 +27,7 @@ namespace Wine_Store_Management_Web.Models
         public string MaSanPham { get; set; } = null!;
 
         [Required]
-        [StringLength(100)]
+        [StringLength(16)]
         public string SoSeri { get; set; } = null!;
 
         [Required]
