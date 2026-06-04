@@ -1,24 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[Table("KIEMKEKHO")]
+public partial class Kiemkekho
 {
-    // 11. BẢNG KIỂM KÊ KHO
-    public class KiemKeKho
-    {
-        [Key]
-        [StringLength(20)]
-        public string MaPhieuKiemKe { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaPhieuKiemKe { get; set; } = null!;
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime ThoiGianKiemKe { get; set; }
+    public DateOnly ThoiGianKiemKe { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public string NguoiLapKiemKe { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string NguoiLapKiemKe { get; set; } = null!;
 
-        [ForeignKey("NguoiLapKiemKe")]
-        public virtual NhanVien? NhanVienKiemKe { get; set; }
-    }
+    [InverseProperty("MaPhieuKiemKeNavigation")]
+    public virtual ICollection<ChitietKiemke> ChitietKiemkes { get; set; } = new List<ChitietKiemke>();
+
+    [ForeignKey("NguoiLapKiemKe")]
+    [InverseProperty("Kiemkekhos")]
+    public virtual Nhanvien NguoiLapKiemKeNavigation { get; set; } = null!;
 }

@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
-using System.Text;
-using Wine_Store_Management_Web.Data;
+using System.Text; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class NhanVienController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public NhanVienController(ApplicationDbContext context)
+        public NhanVienController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -26,7 +25,7 @@ namespace Wine_Store_Management_Web.Controllers
         // POST: NhanVien/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaNhanVien,HoTen,NgaySinh,SoDienThoai,Email,TenDangNhap,MatKhau,VaiTro,TrangThai,NgayLap,NguoiThucHien")] NhanVien nhanVien)
+        public async Task<IActionResult> Create([Bind("MaNhanVien,HoTen,NgaySinh,SoDienThoai,Email,TenDangNhap,MatKhau,VaiTro,TrangThai,NgayLap,NguoiThucHien")] Nhanvien nhanVien)
         {
             if (ModelState.IsValid)
             {

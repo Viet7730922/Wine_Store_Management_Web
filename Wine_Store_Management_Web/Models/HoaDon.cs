@@ -1,72 +1,79 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[Table("HOADON")]
+public partial class Hoadon
 {
-    // 6. BẢNG HÓA ĐƠN BÁN HÀNG
-    public class HoaDon
-    {
-        [Key]
-        [StringLength(20)]
-        public string SoHoaDon { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string SoHoaDon { get; set; } = null!;
 
-        [StringLength(50)]
-        public string? MauSo { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? MauSo { get; set; }
 
-        [StringLength(50)]
-        public string? KyHieu { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? KyHieu { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime NgayHoaDon { get; set; }
+    public DateOnly NgayHoaDon { get; set; }
 
-        [StringLength(150)]
-        public string DonViBanHang { get; set; } = "Cửa Hàng Rượu Chilliquer";
+    [StringLength(150)]
+    public string? DonViBanHang { get; set; }
 
-        [StringLength(255)]
-        public string DiaChiBanHang { get; set; } = "138 Mai Xuân Thưởng, Nha Trang, Khánh Hòa";
+    [StringLength(255)]
+    public string? DiaChiBanHang { get; set; }
 
-        [StringLength(20)]
-        public string DienThoaiBanHang { get; set; } = "0905XXXXXX";
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? DienThoaiBanHang { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string HoTenNguoiMua { get; set; } = null!;
+    [StringLength(100)]
+    public string HoTenNguoiMua { get; set; } = null!;
 
-        [StringLength(255)]
-        public string? DiaChiKhachHang { get; set; }
+    [StringLength(255)]
+    public string? DiaChiKhachHang { get; set; }
 
-        [StringLength(20)]
-        public string? MaKhachHang { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? MaKhachHang { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string HinhThucThanhToan { get; set; } = null!;
+    [StringLength(50)]
+    public string HinhThucThanhToan { get; set; } = null!;
 
-        public string? GhiChu { get; set; }
+    public string? GhiChu { get; set; }
 
-        public string? TongTienVietBangChu { get; set; }
+    public string? TongTienVietBangChu { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public string ThuNgan { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string ThuNgan { get; set; } = null!;
 
-        [StringLength(20)]
-        public string? MaKhuyenMai { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? MaKhuyenMai { get; set; }
 
-        [ForeignKey("MaKhachHang")]
-        public virtual KhachHang? KhachHang { get; set; }
+    [InverseProperty("SoHoaDonNavigation")]
+    public virtual ICollection<ChitietHoadon> ChitietHoadons { get; set; } = new List<ChitietHoadon>();
 
-        [ForeignKey("ThuNgan")]
-        public virtual NhanVien? NhanVienThuNgan { get; set; }
+    [ForeignKey("MaKhachHang")]
+    [InverseProperty("Hoadons")]
+    public virtual Khachhang? MaKhachHangNavigation { get; set; }
 
-        [ForeignKey("MaKhuyenMai")]
-        public virtual KhuyenMai? KhuyenMai { get; set; }
+    [ForeignKey("MaKhuyenMai")]
+    [InverseProperty("Hoadons")]
+    public virtual Khuyenmai? MaKhuyenMaiNavigation { get; set; }
 
-        // Thuộc tính điều hướng trỏ tới danh sách chi tiết của hóa đơn
-        public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();
+    [ForeignKey("ThuNgan")]
+    [InverseProperty("Hoadons")]
+    public virtual Nhanvien ThuNganNavigation { get; set; } = null!;
 
-        [NotMapped]
-        public int DiemTichLuySuDung { get; set; }
-    }
+    [InverseProperty("MaHoaDonNavigation")]
+    public virtual ICollection<TiepnhanBaohanh> TiepnhanBaohanhs { get; set; } = new List<TiepnhanBaohanh>();
 }

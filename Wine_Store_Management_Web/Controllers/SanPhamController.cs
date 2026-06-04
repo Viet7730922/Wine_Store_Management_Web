@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Wine_Store_Management_Web.Data;
+﻿using Microsoft.AspNetCore.Mvc; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class SanPhamController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
         // Tiêm DbContext vào Controller để tương tác với cơ sở dữ liệu
-        public SanPhamController(ApplicationDbContext context)
+        public SanPhamController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -19,15 +18,28 @@ namespace Wine_Store_Management_Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            var sanPham = new Sanpham
+            {
+                NgayTao = DateOnly.FromDateTime(DateTime.Now)
+            };
+            return View(sanPham);
         }
 
         // POST: SanPham/Create
         // Xử lý luồng dữ liệu khi người dùng nhấn nút lưu sản phẩm
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaSanPham,TenSanPham,LoaiSanPham,HangSanXuat,XuatXu,DonViTinh,GiaNhap,GiaBanDeXuat,ThoiHanBaoHanh,MoTa,NguoiLapPhieu,NgayTao")] SanPham sanPham)
+        public async Task<IActionResult> Create([Bind("MaSanPham,TenSanPham,LoaiSanPham,HangSanXuat,XuatXu,DonViTinh,GiaNhap,GiaBanDeXuat,ThoiHanBaoHanh,MoTa,NguoiLapPhieu,NgayTao")] Sanpham sanPham)
         {
+            // Remove navigation properties - chỉ cần FK, không cần object
+            ModelState.Remove("NguoiLapPhieuNavigation");
+            ModelState.Remove("ChitietHoadons");
+            ModelState.Remove("ChitietKiemkes");
+            ModelState.Remove("ChitietPhieunhaps");
+            ModelState.Remove("TiepnhanBaohanhs");
+            ModelState.Remove("TuchoiBaohanhs");
+            ModelState.Remove("PhieuBaohanhKhos");
+
             if (ModelState.IsValid)
             {
                 try

@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Wine_Store_Management_Web.Data;
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class BienNhanGiaoDichController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public BienNhanGiaoDichController(ApplicationDbContext context)
+        public BienNhanGiaoDichController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -21,7 +20,7 @@ namespace Wine_Store_Management_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NgayIn,GioIn,LoaiBienNhan,MaDoiChieuHeThong,TenKhachHang,SoDienThoai,ChiTietSanPham,TongGiaTriDoiChieu,ThuNganXuatPhieu")] BienNhanGiaoDich bienNhan)
+        public async Task<IActionResult> Create([Bind("NgayIn,GioIn,LoaiBienNhan,MaDoiChieuHeThong,TenKhachHang,SoDienThoai,ChiTietSanPham,TongGiaTriDoiChieu,ThuNganXuatPhieu")] BiennhanGiaodich bienNhan)
         {
             if (ModelState.IsValid)
             {

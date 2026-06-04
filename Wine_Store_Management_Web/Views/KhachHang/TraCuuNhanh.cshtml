@@ -1,8 +1,8 @@
-﻿@model Wine_Store_Management_Web.Models.KhachHang
+﻿@model Wine_Store_Management_Web.Models.Khachhang
 
 @{
     ViewData["Title"] = "BH_BM2 - Tra Cứu Khách Hàng";
-    var transactions = ViewBag.RecentTransactions as List<Wine_Store_Management_Web.Models.HoaDon>;
+    var transactions = ViewBag.RecentTransactions as List<Wine_Store_Management_Web.Models.Hoadon>;
 }
 
 <div class="container mt-4">
@@ -43,7 +43,7 @@
                     <div class="col-12 mt-3">
                         <label class="fw-bold">- Số điểm tích lũy hiện tại:</label> <span class="border-bottom-only fw-bold text-danger">@Model.DiemTichLuy</span> Điểm
                         <br />
-                        <span class="fst-italic text-muted">(Giá trị quy đổi khả dụng: @((Model.DiemTichLuy * 5000).ToString("N0")) VNĐ)</span>
+                        <span class="fst-italic text-muted">(Giá trị quy đổi khả dụng: @((Model.DiemTichLuy * 5000)?.ToString("N0")) VNĐ)</span>
                     </div>
                 </div>
 

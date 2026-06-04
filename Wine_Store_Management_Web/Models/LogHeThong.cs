@@ -1,28 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[Table("LOG_HE_THONG")]
+public partial class LogHeThong
 {
-    // 12. BẢNG NHẬT KÝ HOẠT ĐỘNG
-    public class LogHeThong
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MaLog { get; set; }
+    [Key]
+    public int MaLog { get; set; }
 
-        [Required]
-        public DateTime ThoiGian { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime ThoiGian { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string TenTaiKhoan { get; set; } = null!;
+    [StringLength(50)]
+    [Unicode(false)]
+    public string TenTaiKhoan { get; set; } = null!;
 
-        [Required]
-        [StringLength(255)]
-        public string ThaoTacThucHien { get; set; } = null!;
+    [StringLength(255)]
+    public string ThaoTacThucHien { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string TrangThai { get; set; } = null!;
-    }
+    [StringLength(100)]
+    public string TrangThai { get; set; } = null!;
 }

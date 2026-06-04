@@ -1,4 +1,4 @@
-﻿@model Wine_Store_Management_Web.Models.HoaDon
+﻿@model Wine_Store_Management_Web.Models.Hoadon
 
 @{
     ViewData["Title"] = "Hóa Đơn BH_BM1";
@@ -52,15 +52,15 @@
                     @{
                         int stt = 1;
                         decimal tongTienGoc = 0;
-                        foreach (var item in Model.ChiTietHoaDons)
+                        foreach (var item in Model.ChitietHoadons)
                         {
                             var thanhTien = item.SoLuong * item.DonGia;
                             tongTienGoc += thanhTien;
                             <tr>
                                 <td>@stt</td>
                                 <td>@item.MaSanPham</td>
-                                <td class="text-start">@(item.SanPham?.TenSanPham ?? "N/A")</td>
-                                <td>@(item.SanPham?.DonViTinh ?? "Chai")</td>
+                                <td class="text-start">@(item.MaSanPhamNavigation?.TenSanPham ?? "N/A")</td>
+                                <td>@(item.MaSanPhamNavigation?.DonViTinh ?? "Chai")</td>
                                 <td>@item.SoLuong</td>
                                 <td class="text-end">@item.DonGia.ToString("N0")</td>
                                 <td class="text-end fw-bold">@thanhTien.ToString("N0")</td>
@@ -70,12 +70,12 @@
 
                         // Tính tổng sau giảm giá để hiển thị
                         decimal giamGia = 0;
-                        if (Model.KhuyenMai != null)
+                        if (Model.MaKhuyenMaiNavigation != null)
                         {
-                            string numStr = new string(Model.KhuyenMai.MucGiamGia.Where(char.IsDigit).ToArray());
+                            string numStr = new string(Model.MaKhuyenMaiNavigation.MucGiamGia.Where(char.IsDigit).ToArray());
                             if (decimal.TryParse(numStr, out decimal mucGiam))
                             {
-                                giamGia = Model.KhuyenMai.MucGiamGia.Contains("%") ? tongTienGoc * (mucGiam / 100) : mucGiam;
+                                giamGia = Model.MaKhuyenMaiNavigation.MucGiamGia.Contains("%") ? tongTienGoc * (mucGiam / 100) : mucGiam;
                             }
                         }
                         decimal tongThanhToan = tongTienGoc - giamGia;

@@ -1,28 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[PrimaryKey("SoHoaDon", "MaSanPham")]
+[Table("CHITIET_HOADON")]
+public partial class ChitietHoadon
 {
-    // 6b. CHI TIẾT HÓA ĐƠN BÁN HÀNG (Khóa phức hợp)
-    public class ChiTietHoaDon
-    {
-        [StringLength(20)]
-        public string SoHoaDon { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string SoHoaDon { get; set; } = null!;
 
-        [StringLength(20)]
-        public string MaSanPham { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaSanPham { get; set; } = null!;
 
-        [Required]
-        public int SoLuong { get; set; }
+    public int SoLuong { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(15, 2)")]
-        public decimal DonGia { get; set; }
+    [Column(TypeName = "decimal(15, 2)")]
+    public decimal DonGia { get; set; }
 
-        [ForeignKey("SoHoaDon")]
-        public virtual HoaDon? HoaDon { get; set; }
+    [ForeignKey("MaSanPham")]
+    [InverseProperty("ChitietHoadons")]
+    public virtual Sanpham MaSanPhamNavigation { get; set; } = null!;
 
-        [ForeignKey("MaSanPham")]
-        public virtual SanPham? SanPham { get; set; }
-    }
+    [ForeignKey("SoHoaDon")]
+    [InverseProperty("ChitietHoadons")]
+    public virtual Hoadon SoHoaDonNavigation { get; set; } = null!;
 }

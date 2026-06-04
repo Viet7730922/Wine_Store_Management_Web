@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
+using Microsoft.EntityFrameworkCore; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class PhieuNhapController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public PhieuNhapController(ApplicationDbContext context)
+        public PhieuNhapController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -25,7 +24,7 @@ namespace Wine_Store_Management_Web.Controllers
         // Sơ đồ luồng dữ liệu 1.3.2: Nhận thông tin phiếu nhập và lưu.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PhieuNhap phieuNhap, List<ChiTietPhieuNhap> ChiTietPhieuNhaps)
+        public async Task<IActionResult> Create(Phieunhap phieuNhap, List<ChitietPhieunhap> ChiTietPhieuNhaps)
         {
             if (ModelState.IsValid && ChiTietPhieuNhaps != null && ChiTietPhieuNhaps.Count > 0)
             {

@@ -1,52 +1,53 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[Table("PHIEU_BAOHANH_KHO")]
+public partial class PhieuBaohanhKho
 {
-    // 9. BẢNG PHIẾU BẢO HÀNH HỆ THỐNG KẾT XUẤT
-    public class PhieuBaoHanhKho
-    {
-        [Key]
-        [StringLength(50)]
-        public string MaPhieuBH { get; set; } = null!;
+    [Key]
+    [Column("MaPhieuBH")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string MaPhieuBh { get; set; } = null!;
 
-        [Required]
-        [StringLength(20)]
-        public string MaKhachHang { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaKhachHang { get; set; } = null!;
 
-        [Required]
-        [StringLength(20)]
-        public string MaSanPham { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaSanPham { get; set; } = null!;
 
-        [Required]
-        [StringLength(16)]
-        public string SoSeri { get; set; } = null!;
+    [StringLength(16)]
+    [Unicode(false)]
+    public string SoSeri { get; set; } = null!;
 
-        [Required]
-        public string NoiDungLoiGhiNhan { get; set; } = null!;
+    public string NoiDungLoiGhiNhan { get; set; } = null!;
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime NgayTiepNhanHeThong { get; set; }
+    public DateOnly NgayTiepNhanHeThong { get; set; }
 
-        [Required]
-        public int ThoiGianXuLyDuKien { get; set; }
+    public int ThoiGianXuLyDuKien { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime NgayHenTra { get; set; }
+    public DateOnly NgayHenTra { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public string NhanVienThucHien { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string NhanVienThucHien { get; set; } = null!;
 
-        [ForeignKey("MaKhachHang")]
-        public virtual KhachHang? KhachHang { get; set; }
+    [ForeignKey("MaKhachHang")]
+    [InverseProperty("PhieuBaohanhKhos")]
+    public virtual Khachhang MaKhachHangNavigation { get; set; } = null!;
 
-        [ForeignKey("MaSanPham")]
-        public virtual SanPham? SanPham { get; set; }
+    [ForeignKey("MaSanPham")]
+    [InverseProperty("PhieuBaohanhKhos")]
+    public virtual Sanpham MaSanPhamNavigation { get; set; } = null!;
 
-        [ForeignKey("NhanVienThucHien")]
-        public virtual NhanVien? NhanVienThuNgan { get; set; }
-    }
+    [ForeignKey("NhanVienThucHien")]
+    [InverseProperty("PhieuBaohanhKhos")]
+    public virtual Nhanvien NhanVienThucHienNavigation { get; set; } = null!;
 }

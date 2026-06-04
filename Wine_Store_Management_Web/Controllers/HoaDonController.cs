@@ -3,17 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Wine_Store_Management_Web.Data;
+using System.Threading.Tasks; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class HoaDonController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public HoaDonController(ApplicationDbContext context)
+        public HoaDonController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -67,10 +66,10 @@ namespace Wine_Store_Management_Web.Controllers
             string maHoaDonTuDong = "HD" + soMoi.ToString("D2");
 
             // 3. Khởi tạo sẵn Model ném ra View để nó tự điền vào thẻ <input>
-            var hoaDon = new HoaDon
+            var hoaDon = new Hoadon
             {
                 SoHoaDon = maHoaDonTuDong,
-                NgayHoaDon = DateTime.Now // Tiện thể tự điền luôn ngày hôm nay
+                NgayHoaDon = DateOnly.FromDateTime(DateTime.Now) // Tiện thể tự điền luôn ngày hôm nay
             };
 
             return View(hoaDon);
@@ -80,7 +79,7 @@ namespace Wine_Store_Management_Web.Controllers
         // Xử lý lưu hóa đơn và toàn bộ danh sách chi tiết hàng hóa đi kèm
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(HoaDon hoaDon, List<ChiTietHoaDon> ChiTietHoaDons)
+        public async Task<IActionResult> Create(Hoadon hoaDon, List<ChitietHoadon> ChiTietHoaDons)
         {
             ModelState.Remove("ThuNgan");
             ModelState.Remove("KhachHang");
@@ -118,9 +117,9 @@ namespace Wine_Store_Management_Web.Controllers
                     decimal tongTienHang = 0; // Tiền gốc (Đơn giá * Số lượng)
 
                     // Xóa dữ liệu dư thừa do Model Binder tạo ra
-                    if (hoaDon.ChiTietHoaDons != null && hoaDon.ChiTietHoaDons.Any())
+                    if (hoaDon.ChitietHoadons != null && hoaDon.ChitietHoadons.Any())
                     {
-                        hoaDon.ChiTietHoaDons.Clear();
+                        hoaDon.ChitietHoadons.Clear();
                     }
 
                     // 2. Thêm Hóa đơn gốc vào trước để lấy khóa chính
@@ -230,7 +229,7 @@ namespace Wine_Store_Management_Web.Controllers
         public IActionResult Index()
         {
             var danhSachHoaDon = _context.HoaDons
-                .Include(h => h.KhachHang) // Ép tải dữ liệu khách hàng liên kết
+                .Include(h => h.MaKhachHang) // Ép tải dữ liệu khách hàng liên kết
                 .OrderByDescending(h => h.NgayHoaDon)
                 .ToList();
             return View(danhSachHoaDon);
@@ -244,11 +243,11 @@ namespace Wine_Store_Management_Web.Controllers
             if (string.IsNullOrEmpty(id)) return NotFound();
 
             var hoaDon = await _context.HoaDons
-                .Include(h => h.KhachHang)
-                .Include(h => h.NhanVienThuNgan)
-                .Include(h => h.KhuyenMai)
-                .Include(h => h.ChiTietHoaDons)
-                    .ThenInclude(c => c.SanPham)
+                .Include(h => h.MaKhachHang)
+                .Include(h => h.ThuNganNavigation)
+                .Include(h => h.MaKhachHangNavigation)
+                .Include(h => h.ChitietHoadons)
+                    .ThenInclude(c => c.MaSanPhamNavigation)
                 .FirstOrDefaultAsync(m => m.SoHoaDon == id);
 
             if (hoaDon == null) return NotFound();

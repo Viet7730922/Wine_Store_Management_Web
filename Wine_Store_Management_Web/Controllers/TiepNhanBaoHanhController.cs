@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
+using Microsoft.EntityFrameworkCore; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class TiepNhanBaoHanhController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public TiepNhanBaoHanhController(ApplicationDbContext context)
+        public TiepNhanBaoHanhController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -24,7 +23,7 @@ namespace Wine_Store_Management_Web.Controllers
         // POST: TiepNhanBaoHanh/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SoBienBan,NgayTiepNhan,HoTenKhachHang,SoDienThoai,MaSanPham,SoSeri,MaHoaDon,TinhTrangHuHong,PhuKienKemTheo,ThuNganTiepNhan")] TiepNhanBaoHanh tiepNhan)
+        public async Task<IActionResult> Create([Bind("SoBienBan,NgayTiepNhan,HoTenKhachHang,SoDienThoai,MaSanPham,SoSeri,MaHoaDon,TinhTrangHuHong,PhuKienKemTheo,ThuNganTiepNhan")] TiepnhanBaohanh tiepNhan)
         {
             if (ModelState.IsValid)
             {
@@ -40,7 +39,7 @@ namespace Wine_Store_Management_Web.Controllers
 
                     // 2. Đọc dữ liệu đơn hàng cũ D3 dựa trên mã hóa đơn để đối chiếu (DFD 1.3.10 - Bước 3)
                     var hoaDonCu = await _context.HoaDons
-                        .Include(h => h.ChiTietHoaDons)
+                        .Include(h => h.ChitietHoadons)
                         .FirstOrDefaultAsync(h => h.SoHoaDon == tiepNhan.MaHoaDon);
 
                     if (hoaDonCu == null)
@@ -50,7 +49,7 @@ namespace Wine_Store_Management_Web.Controllers
                     }
 
                     // 3. Kiểm tra xem Sản phẩm khách mang tới bảo hành có thực sự nằm trong Hóa đơn cũ không
-                    var isProductInOrder = hoaDonCu.ChiTietHoaDons!.Any(ct => ct.MaSanPham == tiepNhan.MaSanPham);
+                    var isProductInOrder = hoaDonCu.ChitietHoadons!.Any(ct => ct.MaSanPham == tiepNhan.MaSanPham);
                     if (!isProductInOrder)
                     {
                         ModelState.AddModelError("MaSanPham", "Sản phẩm này không nằm trong hóa đơn mua hàng đã cung cấp! Chuyển sang luồng Từ chối bảo hành.");

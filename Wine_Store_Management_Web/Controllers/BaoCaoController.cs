@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class BaoCaoController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public BaoCaoController(ApplicationDbContext context)
+        public BaoCaoController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -34,16 +33,19 @@ namespace Wine_Store_Management_Web.Controllers
             // 1. Lấy danh sách toàn bộ sản phẩm
             var sanPhams = await _context.SanPhams.ToListAsync();
 
-            // 2. Lấy dữ liệu chi tiết phiếu nhập (Số lượng nhập) trong khoảng thời gian
+            var startDate = DateOnly.FromDateTime(tuNgay.Value.Date);
+            var endExclusive = DateOnly.FromDateTime(denNgay.Value.Date).AddDays(1);
+
             var danhSachNhap = await _context.ChiTietPhieuNhaps
-                .Include(c => c.PhieuNhap)
-                .Where(c => c.PhieuNhap!.NgayNhap >= tuNgay.Value && c.PhieuNhap.NgayNhap <= denNgay.Value)
+                .Include(c => c.MaPhieuNhapNavigation)
+                .Where(c => c.MaPhieuNhapNavigation!.NgayNhap >= startDate
+                         && c.MaPhieuNhapNavigation.NgayNhap < endExclusive)
                 .ToListAsync();
 
-            // 3. Lấy dữ liệu chi tiết hóa đơn (Số lượng xuất bán) trong khoảng thời gian
             var danhSachXuat = await _context.ChiTietHoaDons
-                .Include(c => c.HoaDon)
-                .Where(c => c.HoaDon!.NgayHoaDon >= tuNgay.Value && c.HoaDon.NgayHoaDon <= denNgay.Value)
+                .Include(c => c.SoHoaDonNavigation)
+                .Where(c => c.SoHoaDonNavigation!.NgayHoaDon >= startDate
+                         && c.SoHoaDonNavigation.NgayHoaDon < endExclusive)
                 .ToListAsync();
 
             // 4. Kết hợp dữ liệu (LINQ) tạo ra các Object ẩn danh (dynamic) đẩy ra View
@@ -74,26 +76,30 @@ namespace Wine_Store_Management_Web.Controllers
             ViewBag.TuNgay_Input = tuNgay.Value.ToString("yyyy-MM-dd");
             ViewBag.DenNgay_Input = denNgay.Value.ToString("yyyy-MM-dd");
 
+            // Prepare half-open date range [startDate, endExclusive)
+            var startDate = DateOnly.FromDateTime(tuNgay.Value.Date);
+            var endExclusive = DateOnly.FromDateTime(denNgay.Value.Date).AddDays(1);
+
             // Truy vấn hóa đơn cùng với chi tiết hóa đơn và thông tin giá vốn sản phẩm
             var hoaDons = await _context.HoaDons
-                .Include(h => h.ChiTietHoaDons)
-                    .ThenInclude(c => c.SanPham)
-                .Where(h => h.NgayHoaDon >= tuNgay.Value && h.NgayHoaDon <= denNgay.Value)
+                .Include(h => h.ChitietHoadons)
+                    .ThenInclude(c => c.MaSanPhamNavigation)
+                .Where(h => h.NgayHoaDon >= startDate && h.NgayHoaDon < endExclusive)
                 .ToListAsync();
 
             // Nhóm dữ liệu theo ngày (Group By) để tính tổng
-            var thongKeTheoNgay = hoaDons.GroupBy(h => h.NgayHoaDon.Date)
+            var thongKeTheoNgay = hoaDons.GroupBy(h => h.NgayHoaDon.Day)
                 .Select(g => new
                 {
                     NgayThang = g.Key.ToString("dd/MM/yyyy"),
                     SoDonHang = g.Count(),
                     // Tổng doanh thu = Tổng (Số lượng * Đơn giá bán)
-                    TongDoanhThu = g.Sum(h => h.ChiTietHoaDons.Sum(c => c.SoLuong * c.DonGia)),
+                    TongDoanhThu = g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.DonGia)),
                     // Tổng chi phí vốn = Tổng (Số lượng * Giá nhập kho)
-                    TongChiPhiVon = g.Sum(h => h.ChiTietHoaDons.Sum(c => c.SoLuong * c.SanPham!.GiaNhap)),
+                    TongChiPhiVon = g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.MaSanPhamNavigation!.GiaNhap)),
                     // Lợi nhuận = Doanh thu - Chi phí vốn
-                    LoiNhuan = g.Sum(h => h.ChiTietHoaDons.Sum(c => c.SoLuong * c.DonGia))
-                             - g.Sum(h => h.ChiTietHoaDons.Sum(c => c.SoLuong * c.SanPham!.GiaNhap))
+                    LoiNhuan = g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.DonGia))
+                             - g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.MaSanPhamNavigation!.GiaNhap))
                 }).OrderBy(x => x.NgayThang).ToList();
 
             // Tính toán số liệu tổng kết cuối kỳ
@@ -122,11 +128,14 @@ namespace Wine_Store_Management_Web.Controllers
             ViewBag.Thang = dateFilter.Month.ToString("D2");
             ViewBag.Nam = dateFilter.Year;
 
-            // Truy vấn hóa đơn trong tháng/năm được chọn
+            // Truy vấn hóa đơn trong tháng/năm được chọn - use half-open range to include full days
+            var startOfMonth = new DateOnly(dateFilter.Year, dateFilter.Month, 1);
+            var startOfNextMonth = startOfMonth.AddMonths(1);
+
             var hoaDons = await _context.HoaDons
-                .Include(h => h.NhanVienThuNgan) // Lấy thông tin họ tên nhân viên
-                .Include(h => h.ChiTietHoaDons)
-                .Where(h => h.NgayHoaDon.Month == dateFilter.Month && h.NgayHoaDon.Year == dateFilter.Year)
+                .Include(h => h.ThuNganNavigation) // Lấy thông tin họ tên nhân viên
+                .Include(h => h.ChitietHoadons)
+                .Where(h => h.NgayHoaDon >= startOfMonth && h.NgayHoaDon < startOfNextMonth)
                 .ToListAsync();
 
             // Nhóm theo Thu ngân và tính toán hiệu suất
@@ -134,11 +143,11 @@ namespace Wine_Store_Management_Web.Controllers
                 .Select(g => new
                 {
                     MaNhanVien = g.Key,
-                    HoTen = g.First().NhanVienThuNgan?.HoTen ?? "Chưa xác định",
+                    HoTen = g.First().ThuNganNavigation?.HoTen ?? "Chưa xác định",
                     // Số ca trực (Mock logic): Đếm số ngày làm việc độc lập có phát sinh hóa đơn
-                    SoCaTruc = g.Select(h => h.NgayHoaDon.Date).Distinct().Count(),
+                    SoCaTruc = g.Select(h => h.NgayHoaDon.Day).Distinct().Count(),
                     SoHoaDonLap = g.Count(),
-                    DoanhSo = g.Sum(h => h.ChiTietHoaDons.Sum(c => c.SoLuong * c.DonGia))
+                    DoanhSo = g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.DonGia))
                 })
                 // Sắp xếp thứ hạng từ doanh số cao nhất đến thấp nhất
                 .OrderByDescending(x => x.DoanhSo)

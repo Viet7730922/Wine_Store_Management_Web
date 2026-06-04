@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Wine_Store_Management_Web.Models.KhuyenMai>
+﻿@model IEnumerable<Wine_Store_Management_Web.Models.Khuyenmai>
 
 @{
     ViewData["Title"] = "Chương trình Khuyến mãi (QLCH_BM2)";
@@ -26,7 +26,7 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        var isExpired = DateTime.Now.Date > item.DenNgay;
+                        var isExpired = DateOnly.FromDateTime(DateTime.Now) > item.DenNgay;
                         <tr>
                             <td class="fw-bold">@item.MaChuongTrinh</td>
                             <td class="text-start">@item.TenChuongTrinh</td>

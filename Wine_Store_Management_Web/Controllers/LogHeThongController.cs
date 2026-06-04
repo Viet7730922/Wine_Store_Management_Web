@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
+using Microsoft.EntityFrameworkCore; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class LogHeThongController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public LogHeThongController(ApplicationDbContext context)
+        public LogHeThongController(QLChilliquerContext context)
         {
             _context = context;
         }

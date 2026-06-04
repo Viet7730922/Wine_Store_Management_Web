@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
+using Microsoft.EntityFrameworkCore; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class KiemKeKhoController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public KiemKeKhoController(ApplicationDbContext context)
+        public KiemKeKhoController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -22,7 +21,7 @@ namespace Wine_Store_Management_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(KiemKeKho kiemKeKho, List<ChiTietKiemKe> ChiTietKiemKes)
+        public async Task<IActionResult> Create(Kiemkekho kiemKeKho, List<ChitietKiemke> ChiTietKiemKes)
         {
             if (ModelState.IsValid && ChiTietKiemKes != null && ChiTietKiemKes.Count > 0)
             {

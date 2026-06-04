@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
+using Microsoft.EntityFrameworkCore; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class PhieuBaoHanhKhoController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public PhieuBaoHanhKhoController(ApplicationDbContext context)
+        public PhieuBaoHanhKhoController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -22,14 +21,14 @@ namespace Wine_Store_Management_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaPhieuBH,MaKhachHang,MaSanPham,SoSeri,NoiDungLoiGhiNhan,NgayTiepNhanHeThong,ThoiGianXuLyDuKien,NgayHenTra,NhanVienThucHien")] PhieuBaoHanhKho phieuBaoHanh)
+        public async Task<IActionResult> Create([Bind("MaPhieuBH,MaKhachHang,MaSanPham,SoSeri,NoiDungLoiGhiNhan,NgayTiepNhanHeThong,ThoiGianXuLyDuKien,NgayHenTra,NhanVienThucHien")] PhieuBaohanhKho phieuBaoHanh)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     // Kiểm tra trùng lặp mã phiếu bảo hành
-                    var isExist = await _context.PhieuBaoHanhKhos.AnyAsync(p => p.MaPhieuBH == phieuBaoHanh.MaPhieuBH);
+                    var isExist = await _context.PhieuBaoHanhKhos.AnyAsync(p => p.MaPhieuBh == phieuBaoHanh.MaPhieuBh);
                     if (isExist)
                     {
                         ModelState.AddModelError("MaPhieuBH", "Mã phiếu bảo hành này đã tồn tại trên hệ thống!");

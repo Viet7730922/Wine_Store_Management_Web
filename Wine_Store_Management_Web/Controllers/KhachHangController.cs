@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
+using Microsoft.EntityFrameworkCore; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class KhachHangController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public KhachHangController(ApplicationDbContext context)
+        public KhachHangController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -38,7 +37,7 @@ namespace Wine_Store_Management_Web.Controllers
 
             // Lấy 3 giao dịch gần nhất của khách hàng kèm chi tiết để tính tổng tiền
             var recentTransactions = await _context.HoaDons
-                .Include(h => h.ChiTietHoaDons)
+                .Include(h => h.ChitietHoadons)
                 .Where(h => h.MaKhachHang == khachHang.MaKhachHang)
                 .OrderByDescending(h => h.NgayHoaDon)
                 .Take(3)

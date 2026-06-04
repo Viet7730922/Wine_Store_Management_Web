@@ -1,28 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[PrimaryKey("MaPhieuNhap", "MaSanPham")]
+[Table("CHITIET_PHIEUNHAP")]
+public partial class ChitietPhieunhap
 {
-    // 5b. CHI TIẾT PHIẾU NHẬP KHO (Khóa phức hợp)
-    public class ChiTietPhieuNhap
-    {
-        [StringLength(20)]
-        public string MaPhieuNhap { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaPhieuNhap { get; set; } = null!;
 
-        [StringLength(20)]
-        public string MaSanPham { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaSanPham { get; set; } = null!;
 
-        [Required]
-        public int SoLuong { get; set; }
+    public int SoLuong { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(15, 2)")]
-        public decimal DonGia { get; set; }
+    [Column(TypeName = "decimal(15, 2)")]
+    public decimal DonGia { get; set; }
 
-        [ForeignKey("MaPhieuNhap")]
-        public virtual PhieuNhap? PhieuNhap { get; set; }
+    [ForeignKey("MaPhieuNhap")]
+    [InverseProperty("ChitietPhieunhaps")]
+    public virtual Phieunhap MaPhieuNhapNavigation { get; set; } = null!;
 
-        [ForeignKey("MaSanPham")]
-        public virtual SanPham? SanPham { get; set; }
-    }
+    [ForeignKey("MaSanPham")]
+    [InverseProperty("ChitietPhieunhaps")]
+    public virtual Sanpham MaSanPhamNavigation { get; set; } = null!;
 }

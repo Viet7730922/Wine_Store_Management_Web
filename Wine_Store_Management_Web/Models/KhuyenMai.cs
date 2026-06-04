@@ -1,46 +1,44 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[Table("KHUYENMAI")]
+public partial class Khuyenmai
 {
-    // 4. BẢNG CHƯƠNG TRÌNH KHUYẾN MÃI
-    public class KhuyenMai
-    {
-        [Key]
-        [StringLength(20)]
-        public string MaChuongTrinh { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaChuongTrinh { get; set; } = null!;
 
-        [Required]
-        [StringLength(150)]
-        public string TenChuongTrinh { get; set; } = null!;
+    [StringLength(150)]
+    public string TenChuongTrinh { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string HinhThucApDung { get; set; } = null!;
+    [StringLength(100)]
+    public string HinhThucApDung { get; set; } = null!;
 
-        [Required]
-        [StringLength(255)]
-        public string MucGiamGia { get; set; } = null!;
+    [StringLength(255)]
+    public string MucGiamGia { get; set; } = null!;
 
-        public string? DieuKienApDung { get; set; }
+    public string? DieuKienApDung { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime TuNgay { get; set; }
+    public DateOnly TuNgay { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime DenNgay { get; set; }
+    public DateOnly DenNgay { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime NgayDuyet { get; set; }
+    public DateOnly NgayDuyet { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public string NguoiPheDuyet { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string NguoiPheDuyet { get; set; } = null!;
 
-        [ForeignKey("NguoiPheDuyet")]
-        public virtual NhanVien? NhanVienPheDuyet { get; set; }
-    }
+    [InverseProperty("MaKhuyenMaiNavigation")]
+    public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();
+
+    [ForeignKey("NguoiPheDuyet")]
+    [InverseProperty("Khuyenmais")]
+    public virtual Nhanvien NguoiPheDuyetNavigation { get; set; } = null!;
 }

@@ -1,35 +1,44 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[Table("KHACHHANG")]
+[Index("SoDienThoai", Name = "UQ__KHACHHAN__0389B7BD5B1357E1", IsUnique = true)]
+public partial class Khachhang
 {
-    // 3. BẢNG KHÁCH HÀNG THÂN THIẾT
-    public class KhachHang
-    {
-        [Key]
-        [StringLength(20)]
-        public string MaKhachHang { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaKhachHang { get; set; } = null!;
 
-        [Required]
-        [StringLength(100)]
-        public string HoTen { get; set; } = null!;
+    [StringLength(100)]
+    public string HoTen { get; set; } = null!;
 
-        [Required]
-        [StringLength(15)]
-        public string SoDienThoai { get; set; } = null!;
+    [StringLength(15)]
+    [Unicode(false)]
+    public string SoDienThoai { get; set; } = null!;
 
-        [StringLength(100)]
-        [EmailAddress]
-        public string? Email { get; set; }
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? Email { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime NgayDangKyThe { get; set; }
+    public DateOnly NgayDangKyThe { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string HangThanhVien { get; set; } = null!;
+    [StringLength(50)]
+    public string HangThanhVien { get; set; } = null!;
 
-        public int DiemTichLuy { get; set; } = 0;
-    }
+    public int? DiemTichLuy { get; set; }
 
+    [InverseProperty("MaKhachHangNavigation")]
+    public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();
+
+    [InverseProperty("MaKhachHangNavigation")]
+    public virtual ICollection<PhieuBaohanhKho> PhieuBaohanhKhos { get; set; } = new List<PhieuBaohanhKho>();
+
+    [InverseProperty("MaKhachHangNavigation")]
+    public virtual ICollection<TuchoiBaohanh> TuchoiBaohanhs { get; set; } = new List<TuchoiBaohanh>();
 }

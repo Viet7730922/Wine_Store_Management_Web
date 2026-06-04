@@ -1,55 +1,57 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Wine_Store_Management_Web.Models
+namespace Wine_Store_Management_Web.Models;
+
+[Table("TIEPNHAN_BAOHANH")]
+public partial class TiepnhanBaohanh
 {
-    // 7. BẢNG BIÊN BẢN TIẾP NHẬN BẢO HÀNH
-    public class TiepNhanBaoHanh
-    {
-        [Key]
-        [StringLength(20)]
-        public string SoBienBan { get; set; } = null!;
+    [Key]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string SoBienBan { get; set; } = null!;
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime NgayTiepNhan { get; set; }
+    public DateOnly NgayTiepNhan { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string HoTenKhachHang { get; set; } = null!;
+    [StringLength(100)]
+    public string HoTenKhachHang { get; set; } = null!;
 
-        [Required]
-        [StringLength(15)]
-        public string SoDienThoai { get; set; } = null!;
+    [StringLength(15)]
+    [Unicode(false)]
+    public string SoDienThoai { get; set; } = null!;
 
-        [Required]
-        [StringLength(20)]
-        public string MaSanPham { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaSanPham { get; set; } = null!;
 
-        [Required]
-        [StringLength(16)]
-        public string SoSeri { get; set; } = null!;
+    [StringLength(16)]
+    [Unicode(false)]
+    public string SoSeri { get; set; } = null!;
 
-        [Required]
-        [StringLength(20)]
-        public string MaHoaDon { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MaHoaDon { get; set; } = null!;
 
-        [Required]
-        public string TinhTrangHuHong { get; set; } = null!;
+    public string TinhTrangHuHong { get; set; } = null!;
 
-        public string? PhuKienKemTheo { get; set; }
+    public string? PhuKienKemTheo { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public string ThuNganTiepNhan { get; set; } = null!;
+    [StringLength(20)]
+    [Unicode(false)]
+    public string ThuNganTiepNhan { get; set; } = null!;
 
-        [ForeignKey("MaSanPham")]
-        public virtual SanPham? SanPham { get; set; }
+    [ForeignKey("MaHoaDon")]
+    [InverseProperty("TiepnhanBaohanhs")]
+    public virtual Hoadon MaHoaDonNavigation { get; set; } = null!;
 
-        [ForeignKey("MaHoaDon")]
-        public virtual HoaDon? HoaDon { get; set; }
+    [ForeignKey("MaSanPham")]
+    [InverseProperty("TiepnhanBaohanhs")]
+    public virtual Sanpham MaSanPhamNavigation { get; set; } = null!;
 
-        [ForeignKey("ThuNganTiepNhan")]
-        public virtual NhanVien? NhanVienThuNgan { get; set; }
-    }
+    [ForeignKey("ThuNganTiepNhan")]
+    [InverseProperty("TiepnhanBaohanhs")]
+    public virtual Nhanvien ThuNganTiepNhanNavigation { get; set; } = null!;
 }

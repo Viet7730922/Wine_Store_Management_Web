@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
+using Microsoft.EntityFrameworkCore; 
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class KhuyenMaiController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly QLChilliquerContext _context;
 
-        public KhuyenMaiController(ApplicationDbContext context)
+        public KhuyenMaiController(QLChilliquerContext context)
         {
             _context = context;
         }
@@ -24,7 +23,7 @@ namespace Wine_Store_Management_Web.Controllers
         // POST: KhuyenMai/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaChuongTrinh,TenChuongTrinh,HinhThucApDung,MucGiamGia,DieuKienApDung,TuNgay,DenNgay,NgayDuyet,NguoiPheDuyet")] KhuyenMai khuyenMai)
+        public async Task<IActionResult> Create([Bind("MaChuongTrinh,TenChuongTrinh,HinhThucApDung,MucGiamGia,DieuKienApDung,TuNgay,DenNgay,NgayDuyet,NguoiPheDuyet")] Khuyenmai khuyenMai)
         {
             if (ModelState.IsValid)
             {

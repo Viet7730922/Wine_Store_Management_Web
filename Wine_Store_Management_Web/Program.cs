@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Data;
-using Wine_Store_Management_Web.Models;
+using Wine_Store_Management_Web.Models; // QLChilliquerContext nằm trong Models
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Thêm dịch vụ MVC vào vùng chứa (Container)
 builder.Services.AddControllersWithViews();
 
-// 2. Đăng ký kết nối Cơ sở dữ liệu SQL Server với Connection String "DefaultConnection"
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+// Dùng QLChilliquerContext thay vì ApplicationDbContext
+builder.Services.AddDbContext<QLChilliquerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
