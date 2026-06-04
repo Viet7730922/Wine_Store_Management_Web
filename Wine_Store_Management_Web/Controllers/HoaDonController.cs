@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using Wine_Store_Management_Web.Data;
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
@@ -81,16 +82,17 @@ namespace Wine_Store_Management_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Hoadon hoaDon, List<ChitietHoadon> ChiTietHoaDons)
         {
-            ModelState.Remove("ThuNgan");
-            ModelState.Remove("KhachHang");
-            ModelState.Remove("KhuyenMai");
-            ModelState.Remove("NhanVienThuNgan");
+            ModelState.Remove("ThuNgan"); // Xóa validation khóa ngoại (được gán bằng NV01 ở dưới)
+            ModelState.Remove("MaKhachHangNavigation");
+            ModelState.Remove("MaKhuyenMaiNavigation");
+            ModelState.Remove("ThuNganNavigation");
+            ModelState.Remove("ChitietHoadons"); // Xóa thuộc tính list tự động sinh
 
             for (int i = 0; i < ChiTietHoaDons.Count; i++)
             {
-                ModelState.Remove($"ChiTietHoaDons[{i}].SoHoaDon");
-                ModelState.Remove($"ChiTietHoaDons[{i}].HoaDon");
-                ModelState.Remove($"ChiTietHoaDons[{i}].SanPham");
+                ModelState.Remove($"ChiTietHoaDons[{i}].SoHoaDon"); // Được gán sau khi lưu hóa đơn
+                ModelState.Remove($"ChiTietHoaDons[{i}].SoHoaDonNavigation");
+                ModelState.Remove($"ChiTietHoaDons[{i}].MaSanPhamNavigation");
             }
 
             if (string.IsNullOrEmpty(hoaDon.ThuNgan))
@@ -229,7 +231,7 @@ namespace Wine_Store_Management_Web.Controllers
         public IActionResult Index()
         {
             var danhSachHoaDon = _context.HoaDons
-                .Include(h => h.MaKhachHang) // Ép tải dữ liệu khách hàng liên kết
+                .Include(h => h.MaKhachHangNavigation) // Đã sửa tên Navigation
                 .OrderByDescending(h => h.NgayHoaDon)
                 .ToList();
             return View(danhSachHoaDon);
@@ -243,9 +245,9 @@ namespace Wine_Store_Management_Web.Controllers
             if (string.IsNullOrEmpty(id)) return NotFound();
 
             var hoaDon = await _context.HoaDons
-                .Include(h => h.MaKhachHang)
-                .Include(h => h.ThuNganNavigation)
                 .Include(h => h.MaKhachHangNavigation)
+                .Include(h => h.ThuNganNavigation)
+                .Include(h => h.MaKhuyenMaiNavigation) // Đã sửa lại đúng tên
                 .Include(h => h.ChitietHoadons)
                     .ThenInclude(c => c.MaSanPhamNavigation)
                 .FirstOrDefaultAsync(m => m.SoHoaDon == id);

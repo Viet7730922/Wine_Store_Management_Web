@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Wine_Store_Management_Web.Models;
 
-namespace Wine_Store_Management_Web.Models;
+namespace Wine_Store_Management_Web.Data;
 
 public partial class QLChilliquerContext : DbContext
 {

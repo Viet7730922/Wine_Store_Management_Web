@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore; 
-using Wine_Store_Management_Web.Models;
+using Microsoft.EntityFrameworkCore;
+using Wine_Store_Management_Web.Data;
 
 namespace Wine_Store_Management_Web.Controllers
 {

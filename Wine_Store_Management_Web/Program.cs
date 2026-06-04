@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Wine_Store_Management_Web.Models; // QLChilliquerContext nằm trong Models
+using Wine_Store_Management_Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

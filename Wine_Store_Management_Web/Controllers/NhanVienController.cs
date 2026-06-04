@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
-using System.Text; 
+using System.Text;
+using Wine_Store_Management_Web.Data;
 using Wine_Store_Management_Web.Models;
 
 namespace Wine_Store_Management_Web.Controllers
