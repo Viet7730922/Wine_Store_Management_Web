@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Wine_Store_Management_Web.Data;
 using Wine_Store_Management_Web.Models;
 
@@ -18,26 +21,47 @@ namespace Wine_Store_Management_Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            // FIX BUG 1: Khởi tạo sẵn dữ liệu để thẻ asp-for không ghi đè ngày thành rỗng/mặc định
+            var km = new Khuyenmai
+            {
+                NgayDuyet = DateOnly.FromDateTime(DateTime.Now),
+                TuNgay = DateOnly.FromDateTime(DateTime.Now),
+                DenNgay = DateOnly.FromDateTime(DateTime.Now).AddDays(7)
+            };
+            return View(km);
         }
 
         // POST: KhuyenMai/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaChuongTrinh,TenChuongTrinh,HinhThucApDung,MucGiamGia,DieuKienApDung,TuNgay,DenNgay,NgayDuyet,NguoiPheDuyet")] Khuyenmai khuyenMai)
+        public async Task<IActionResult> Create(Khuyenmai khuyenMai)
         {
+            // 1. Quét và xóa toàn bộ các bắt lỗi ngầm của EF Core sinh ra
+            var keysToRemove = ModelState.Keys.Where(k => k.Contains("Navigation") || k == "Hoadons").ToList();
+            foreach (var key in keysToRemove)
+            {
+                ModelState.Remove(key);
+            }
+
+            // 2. Gán tự động Người duyệt nếu để trống
+            if (string.IsNullOrEmpty(khuyenMai.NguoiPheDuyet))
+            {
+                ModelState.Remove("NguoiPheDuyet");
+                khuyenMai.NguoiPheDuyet = "NV01";
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // 1. Kiểm tra logic thời gian cơ bản
+                    // Kiểm tra ngày hợp lệ
                     if (khuyenMai.TuNgay > khuyenMai.DenNgay)
                     {
                         ModelState.AddModelError("DenNgay", "Ngày kết thúc không được nhỏ hơn ngày bắt đầu!");
                         return View(khuyenMai);
                     }
 
-                    // 2. Kiểm tra trùng lặp mã chương trình (Tránh lỗi khóa chính)
+                    // Kiểm tra trùng mã Khuyến mãi
                     var isExist = await _context.KhuyenMais.AnyAsync(k => k.MaChuongTrinh == khuyenMai.MaChuongTrinh);
                     if (isExist)
                     {
@@ -45,19 +69,10 @@ namespace Wine_Store_Management_Web.Controllers
                         return View(khuyenMai);
                     }
 
-                    // 3. Đối chiếu dữ liệu D3 để đảm bảo không bị xung đột thời gian ưu đãi (DFD 1.3.15 - Bước 3)
-                    // Kiểm tra xem có chương trình nào đang chạy chồng chéo thời gian không
-                    var isConflict = await _context.KhuyenMais.AnyAsync(k =>
-                        (khuyenMai.TuNgay >= k.TuNgay && khuyenMai.TuNgay <= k.DenNgay) ||
-                        (khuyenMai.DenNgay >= k.TuNgay && khuyenMai.DenNgay <= k.DenNgay));
+                    // ĐÃ XÓA TÍNH NĂNG CHẶN CHỒNG CHÉO THỜI GIAN
+                    // (Cho phép chạy nhiều chiến dịch khuyến mãi song song)
 
-                    if (isConflict)
-                    {
-                        ModelState.AddModelError("", "Cảnh báo: Khoảng thời gian này đang có một chương trình khuyến mãi khác hoạt động. Vui lòng kiểm tra lại để tránh xung đột!");
-                        return View(khuyenMai);
-                    }
-
-                    // 4. Lưu dữ liệu vào CSDL
+                    // Lưu thẳng vào Database
                     _context.Add(khuyenMai);
                     await _context.SaveChangesAsync();
 
@@ -66,9 +81,11 @@ namespace Wine_Store_Management_Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Lỗi hệ thống khi thiết lập khuyến mãi: " + ex.Message);
+                    ModelState.AddModelError("", "Lỗi hệ thống: " + ex.Message);
                 }
             }
+
+            // Nếu có lỗi ngầm chưa bị bắt, hệ thống sẽ trả lại View
             return View(khuyenMai);
         }
 

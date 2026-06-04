@@ -12,49 +12,69 @@
             </div>
 
             <form asp-action="Create" method="post">
+                <div asp-validation-summary="All" class="text-danger fw-bold text-center mb-3"></div>
+
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Ngày tiếp nhận:</label>
-                        <input asp-for="NgayTiepNhan" type="date" class="form-control form-control-sm w-50" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <input asp-for="NgayTiepNhan" type="date" class="form-control form-control-sm w-50 bg-light" readonly />
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <label class="form-label fw-bold">Số: TNBH/</label>
-                        <input asp-for="SoBienBan" class="form-control form-control-sm d-inline w-50" placeholder="Mã biên bản" />
+                        <label class="form-label fw-bold">Số: </label>
+                        <input asp-for="SoBienBan" class="form-control form-control-sm d-inline w-50 bg-light" readonly />
                     </div>
                 </div>
 
                 <div class="row g-3 mt-2">
                     <div class="col-md-8">
-                        <label class="form-label fw-bold">- Họ tên khách hàng:</label>
-                        <input asp-for="HoTenKhachHang" class="form-control border-bottom-only" placeholder="........................................................................................" />
+                        <label class="form-label fw-bold">- Chọn khách hàng:</label>
+                        <select asp-for="HoTenKhachHang" id="KhachHangSelect" class="form-select border-bottom-only">
+                            <option value="">-- Click để chọn khách hàng --</option>
+                            @if (ViewBag.KhachHangs != null)
+                            {
+                                foreach (var kh in ViewBag.KhachHangs)
+                                {
+                                    <option value="@kh.HoTen" data-ma="@kh.MaKhachHang" data-sdt="@kh.SoDienThoai">@kh.HoTen (@kh.MaKhachHang)</option>
+                                }
+                            }
+                        </select>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">- Số điện thoại:</label>
-                        <input asp-for="SoDienThoai" class="form-control border-bottom-only" placeholder="..................................." />
+                        <input asp-for="SoDienThoai" id="SoDienThoai" class="form-control border-bottom-only" placeholder="Sẽ tự điền, có thể sửa..." />
                     </div>
 
                     <div class="col-md-12 mt-3">
-                        <label class="form-label fw-bold">- Tên sản phẩm lỗi (Mã SP):</label>
-                        <input asp-for="MaSanPham" class="form-control border-bottom-only" placeholder="Nhập mã sản phẩm lỗi hệ thống sẽ tự đối chiếu..." />
+                        <label class="form-label fw-bold">- Chọn sản phẩm lỗi:</label>
+                        <select asp-for="MaSanPham" id="MaSanPham" class="form-select border-bottom-only">
+                            <option value="">-- Click để chọn sản phẩm --</option>
+                            @if (ViewBag.SanPhams != null)
+                            {
+                                foreach (var sp in ViewBag.SanPhams)
+                                {
+                                    <option value="@sp.MaSanPham" data-seri="@sp.SoSeri">@sp.TenSanPham (@sp.MaSanPham)</option>
+                                }
+                            }
+                        </select>
                     </div>
 
                     <div class="col-md-6 mt-3">
                         <label class="form-label fw-bold">- Số Seri sản phẩm:</label>
-                        <input asp-for="SoSeri" class="form-control border-bottom-only" placeholder=".................." />
+                        <input asp-for="SoSeri" id="SoSeri" class="form-control border-bottom-only bg-light" placeholder="Hệ thống tự động điền..." readonly />
                     </div>
                     <div class="col-md-6 mt-3">
                         <label class="form-label fw-bold">Mã hóa đơn mua:</label>
-                        <input asp-for="MaHoaDon" class="form-control border-bottom-only" placeholder=".........................................." />
+                        <input asp-for="MaHoaDon" id="MaHoaDon" class="form-control border-bottom-only bg-light" placeholder="Hệ thống tự đối chiếu KH và SP..." readonly />
                     </div>
 
                     <div class="col-12 mt-3">
                         <label class="form-label fw-bold">- Tình trạng hư hỏng thực tế khi nhận:</label>
-                        <textarea asp-for="TinhTrangHuHong" class="form-control border-bottom-only" rows="2" placeholder=".........................................................................................................................."></textarea>
+                        <textarea asp-for="TinhTrangHuHong" class="form-control border-bottom-only" rows="2" placeholder="Nhập tình trạng..."></textarea>
                     </div>
 
                     <div class="col-12 mt-3">
                         <label class="form-label fw-bold">- Phụ kiện đi kèm (nếu có):</label>
-                        <input asp-for="PhuKienKemTheo" class="form-control border-bottom-only" placeholder=".............................................................................." />
+                        <input asp-for="PhuKienKemTheo" class="form-control border-bottom-only" placeholder="Nhập phụ kiện..." />
                     </div>
                 </div>
 
@@ -70,7 +90,16 @@
                     <div class="col-6">
                         <p class="fw-bold m-0">Thu ngân tiếp nhận</p>
                         <small class="text-muted d-block mb-4">(Ký, ghi rõ họ tên)</small>
-                        <input asp-for="ThuNganTiepNhan" type="text" class="form-control form-control-sm w-50 mx-auto text-center border-bottom-only" placeholder="Mã Thu Ngân" />
+                        <select asp-for="ThuNganTiepNhan" class="form-select form-select-sm w-50 mx-auto text-center border-bottom-only">
+                            <option value="">-- Chọn tên thu ngân --</option>
+                            @if (ViewBag.NhanViens != null)
+                            {
+                                foreach (var nv in ViewBag.NhanViens)
+                                {
+                                    <option value="@nv.MaNhanVien">@nv.HoTen</option>
+                                }
+                            }
+                        </select>
                     </div>
                 </div>
 
@@ -95,4 +124,19 @@
         .border-bottom-only:focus {
             border-bottom: 2px solid #0d6efd;
         }
+
+    select.border-bottom-only {
+        appearance: none; /* Ẩn mũi tên mặc định để trông giống dòng kẻ tay hơn */
+        -webkit-appearance: none;
+        padding-left: 0;
+        cursor: pointer;
+    }
 </style>
+
+@section Scripts {
+    <script>
+        window.hoaDonsJsonData = @Html.Raw(ViewBag.HoaDonsJson ?? "[]");
+    </script>
+
+    <script src="~/js/tiepnhanbaohanh.js" asp-append-version="true"></script>
+}

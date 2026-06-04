@@ -1,0 +1,125 @@
+﻿@model Wine_Store_Management_Web.Models.PhieuBaohanhKho
+
+@{
+    ViewData["Title"] = "Kết xuất dữ liệu hệ thống - Mẫu BH_BM05";
+}
+
+<div class="container my-5 d-flex justify-content-center">
+    <div style="width: 680px;">
+        <div class="p-5 bg-white border-dashed position-relative shadow-sm" style="color: #000; font-family: 'Times New Roman', Times, serif;">
+
+            <h5 class="fw-bold m-0 text-uppercase tracking-wider">CỬA HÀNG RƯỢU CHILLIQUER</h5>
+            <div class="line-dashed my-3"></div>
+
+            <h4 class="text-center fw-bold m-0 mt-3 text-uppercase">PHIẾU BẢO HÀNH</h4>
+            <p class="text-center small fst-italic mb-2">(Kết xuất dữ liệu hệ thống - Mẫu BH_BM05)</p>
+            <h5 class="text-center mb-4 fw-normal">Mã phiếu: <span class="fw-bold">@Model.MaPhieuBh</span></h5>
+
+            <div class="mb-4 space-y-fields" style="line-height: 2.3; font-size: 1.1rem;">
+                <div class="row">
+                    <div class="col-8 d-flex">
+                        <span class="text-nowrap">- Khách hàng:</span>
+                        <span class="border-dotted-line flex-grow-1 ps-2 fw-bold">@Model.MaKhachHangNavigation?.HoTen</span>
+                    </div>
+                    <div class="col-4 d-flex">
+                        <span class="text-nowrap">SĐT:</span>
+                        <span class="border-dotted-line flex-grow-1 ps-2">@Model.MaKhachHangNavigation?.SoDienThoai</span>
+                    </div>
+                </div>
+
+                <div class="d-flex mt-1">
+                    <span class="text-nowrap">- Sản phẩm xử lý:</span>
+                    <span class="border-dotted-line flex-grow-1 ps-2">@Model.MaSanPhamNavigation?.TenSanPham (@Model.MaSanPham)</span>
+                </div>
+
+                <div class="d-flex mt-1">
+                    <span class="text-nowrap">- Số Seri/Mã vạch:</span>
+                    <span class="border-dotted-line flex-grow-1 ps-2 fw-bold text-monospace">@Model.SoSeri</span>
+                </div>
+
+                <div class="d-flex mt-1">
+                    <span class="text-nowrap">- Nội dung lỗi ghi nhận:</span>
+                    <span class="border-dotted-line flex-grow-1 ps-2 fst-italic">@Model.NoiDungLoiGhiNhan</span>
+                </div>
+
+                <div class="d-flex mt-1">
+                    <span class="text-nowrap">- Ngày tiếp nhận hệ thống:</span>
+                    <span class="border-dotted-line flex-grow-1 ps-2">
+                        ngày @Model.NgayTiepNhanHeThong.Day tháng @Model.NgayTiepNhanHeThong.Month năm @Model.NgayTiepNhanHeThong.Year
+                    </span>
+                </div>
+
+                <div class="d-flex mt-1 align-items-center">
+                    <span class="text-nowrap">- Thời gian xử lý dự kiến:</span>
+                    <span class="border-dotted-line text-center fw-bold px-2" style="width: 60px;">@Model.ThoiGianXuLyDuKien</span>
+                    <span class="ms-1">ngày.</span>
+                    @* <span class="border-dotted-line flex-grow-1"></span> *@
+                </div>
+
+                <div class="d-flex mt-1">
+                    <span class="text-nowrap">- Ngày hẹn trả sản phẩm:</span>
+                    <span class="border-dotted-line flex-grow-1 ps-2 fw-bold text-danger">
+                        ngày @Model.NgayHenTra.Day tháng @Model.NgayHenTra.Month năm @Model.NgayHenTra.Year
+                    </span>
+                </div>
+            </div>
+
+            <p class="fw-bold mt-4 mb-4" style="font-size: 1.05rem;">* Quý khách vui lòng xuất trình phiếu này khi đến nhận lại sản phẩm.</p>
+
+            <div class="line-dashed my-3"></div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3" style="font-size: 1rem;">
+                <div>
+                    <span>Hệ thống kết xuất tự động |</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 320px;">
+                    <span class="text-nowrap fw-bold">Nhân viên thực hiện:</span>
+                    <span class="border-dotted-line flex-grow-1 ps-2 fw-bold text-center">@Model.NhanVienThucHienNavigation?.HoTen</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4 d-print-none">
+            <button onclick="window.print()" class="btn btn-primary px-5 py-2 fw-bold"><i class="bi bi-printer"></i> Tiến hành In Phiếu</button>
+            <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 ms-2">Quay lại danh sách</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* CSS mô phỏng chính xác khung viền đứt nét của ảnh mẫu */
+    .border-dashed {
+        border: 2px dashed #000;
+        background-color: #fff;
+    }
+
+    .line-dashed {
+        border-top: 1px dashed #000;
+        width: 100%;
+    }
+    /* Tạo hiệu ứng dòng kẻ chấm chấm viết tay */
+    .border-dotted-line {
+        border-bottom: 1px dotted #000;
+    }
+
+    @@media print {
+        header, footer, .d-print-none {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .border-dashed {
+            border: 2px dashed #000 !important;
+            box-shadow: none !important;
+        }
+
+        body {
+            background-color: #fff !important;
+        }
+    }
+</style>

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Wine_Store_Management_Web.Models.TuchoiBaohanh>
+
+@{
+    ViewData["Title"] = "Nhật Ký Từ Chối Bảo Hành";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-dark fw-bold"><i class="bi bi-shield-x text-danger"></i> LỊCH SỬ TỪ CHỐI BẢO HÀNH</h4>
+        <a asp-action="Create" class="btn btn-danger"><i class="bi bi-file-earmark-plus"></i> Lập Phiếu Mới</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center fw-bold">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="card shadow-sm border-dark">
+        <div class="card-body p-0">
+            <table class="table table-hover table-bordered align-middle text-center m-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width: 12%">Ngày lập</th>
+                        <th style="width: 12%">Mã KH</th>
+                        <th>Tên Khách Hàng</th>
+                        <th style="width: 15%">Mã Sản Phẩm</th>
+                        <th>Số Seri sản phẩm</th>
+                        <th>Thu ngân lập</th>
+                        <th style="width: 10%">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-muted p-4">Hệ thống chưa ghi nhận trường hợp vi phạm quy định bảo hành nào.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.NgayLapPhieu.ToString("dd/MM/yyyy")</td>
+                                <td class="fw-bold">@item.MaKhachHang</td>
+                                <td class="text-start ps-3">@item.MaKhachHangNavigation?.HoTen</td>
+                                <td><span class="badge bg-secondary">@item.MaSanPham</span></td>
+                                <td class="text-monospace fw-bold">@item.SoSeri</td>
+                                <td>@item.ThuNganXacNhanNavigation?.HoTen</td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.MaPhieuTuChoi" class="btn btn-sm btn-outline-dark">
+                                        <i class="bi bi-printer"></i> In/Xem
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

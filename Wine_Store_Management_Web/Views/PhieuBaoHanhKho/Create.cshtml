@@ -1,80 +1,127 @@
 ﻿@model Wine_Store_Management_Web.Models.PhieuBaohanhKho
 
 @{
-    ViewData["Title"] = "BH_BM5 - Phiếu Bảo Hành";
+    ViewData["Title"] = "BH_BM5 - Lập Phiếu Bảo Hành Kho";
 }
 
 <div class="container mt-4 d-flex justify-content-center">
-    <div class="card shadow-sm" style="width: 600px; border: 2px dashed #000;">
+    <div class="card shadow-sm" style="width: 650px; border: 2px dashed #000;">
         <div class="card-body p-4">
-            <h5 class="text-center fw-bold m-0">CỬA HÀNG RƯỢU CHILLIQUER</h5>
+            <h5 class="fw-bold m-0 text-uppercase">CỬA HÀNG RƯỢU CHILLIQUER</h5>
             <hr style="border-top: 2px dashed #000;" />
-            <h4 class="text-center fw-bold">PHIẾU BẢO HÀNH</h4>
+            <h4 class="text-center fw-bold text-uppercase">PHIẾU BẢO HÀNH</h4>
             <p class="text-center small text-muted">(Kết xuất dữ liệu hệ thống - Mẫu BH_BM05)</p>
 
             <form asp-action="Create" method="post">
+                <div asp-validation-summary="All" class="text-danger fw-bold small mb-3"></div>
+
                 <div class="mb-3">
                     <label class="fw-bold">Mã phiếu:</label>
-                    <input asp-for="MaPhieuBh" class="form-control border-bottom-only d-inline w-75" placeholder="PBH-2026-................" />
+                    <input asp-for="MaPhieuBh" class="form-control border-bottom-only d-inline w-75 bg-light fw-bold text-primary" readonly />
                 </div>
 
                 <div class="row g-2 mb-2">
                     <div class="col-8">
                         <label class="fw-bold">- Khách hàng:</label>
-                        <input asp-for="MaKhachHang" class="form-control border-bottom-only w-100" placeholder="................................................" />
+                        <select asp-for="MaKhachHang" id="KhachHangSelect" class="form-select border-bottom-only" required>
+                            <option value="">-- Chọn khách hàng --</option>
+                            @if (ViewBag.KhachHangs != null)
+                            {
+                                foreach (var kh in ViewBag.KhachHangs)
+                                {
+                                    <option value="@kh.MaKhachHang" data-sdt="@kh.SoDienThoai">@kh.MaKhachHang - @kh.HoTen</option>
+                                }
+                            }
+                        </select>
                     </div>
                     <div class="col-4">
                         <label class="fw-bold">SĐT:</label>
-                        <input type="text" class="form-control border-bottom-only w-100" placeholder="..........................." readonly />
+                        <input type="text" id="SoDienThoai" class="form-control border-bottom-only w-100" placeholder="Có thể gõ sửa..." />
                     </div>
                 </div>
 
                 <div class="mb-2">
                     <label class="fw-bold">- Sản phẩm xử lý:</label>
-                    <input asp-for="MaSanPham" class="form-control border-bottom-only w-100" placeholder="..............................................................................." />
+                    <select asp-for="MaSanPham" id="SanPhamSelect" class="form-select border-bottom-only" required>
+                        <option value="">-- Chọn sản phẩm rượu xử lý --</option>
+                        @if (ViewBag.SanPhams != null)
+                        {
+                            foreach (var sp in ViewBag.SanPhams)
+                            {
+                                <option value="@sp.MaSanPham" data-seri="@sp.SoSeri">@sp.MaSanPham - @sp.TenSanPham</option>
+                            }
+                        }
+                    </select>
                 </div>
 
                 <div class="mb-2">
                     <label class="fw-bold">- Số Seri/Mã vạch:</label>
-                    <input asp-for="SoSeri" class="form-control border-bottom-only w-100" placeholder=".............................................................................." />
+                    <input asp-for="SoSeri" id="SoSeri" class="form-control border-bottom-only w-100 bg-light fw-bold" placeholder="Hệ thống tự động tra số Seri..." readonly />
                 </div>
 
                 <div class="mb-2">
                     <label class="fw-bold">- Nội dung lỗi ghi nhận:</label>
-                    <input asp-for="NoiDungLoiGhiNhan" class="form-control border-bottom-only w-100" placeholder="....................................................................." />
+                    <input asp-for="NoiDungLoiGhiNhan" class="form-control border-bottom-only w-100" placeholder="Nhập tóm tắt nội dung lỗi rượu..." required />
                 </div>
 
                 <div class="mb-2">
                     <label class="fw-bold">- Ngày tiếp nhận hệ thống:</label>
-                    <input asp-for="NgayTiepNhanHeThong" type="date" class="form-control border-bottom-only d-inline w-50" />
+                    <input asp-for="NgayTiepNhanHeThong" id="NgayTiepNhan" type="date" class="form-control border-bottom-only d-inline w-50" required />
                 </div>
 
                 <div class="mb-2 d-flex align-items-center">
                     <label class="fw-bold me-2">- Thời gian xử lý dự kiến:</label>
-                    <input asp-for="ThoiGianXuLyDuKien" type="number" class="form-control border-bottom-only text-center" style="width: 80px;" />
+                    <input asp-for="ThoiGianXuLyDuKien" id="ThoiGianXuLy" type="number" class="form-control border-bottom-only text-center" style="width: 80px;" min="1" required />
                     <span class="ms-2">ngày.</span>
                 </div>
 
                 <div class="mb-4">
                     <label class="fw-bold">- Ngày hẹn trả sản phẩm:</label>
-                    <input asp-for="NgayHenTra" type="date" class="form-control border-bottom-only d-inline w-50" />
+                    <input asp-for="NgayHenTra" id="NgayHenTra" type="date" class="form-control border-bottom-only d-inline w-50 fw-bold text-danger" required />
                 </div>
 
                 <p class="fst-italic small">* Quý khách vui lòng xuất trình phiếu này khi đến nhận lại sản phẩm.</p>
                 <hr style="border-top: 2px dashed #000;" />
 
                 <div class="d-flex justify-content-between align-items-center">
-                    <small>Hệ thống kết xuất tự động |</small>
+                    <small class="text-muted">Hệ thống kết xuất tự động |</small>
                     <div>
                         <label class="fw-bold small">Nhân viên thực hiện:</label>
-                        <input asp-for="NhanVienThucHien" class="form-control form-control-sm border-bottom-only d-inline" style="width: 150px;" value="@User.Identity?.Name" readonly />
+                        <input asp-for="NhanVienThucHien" class="form-control form-control-sm border-bottom-only d-inline text-center" style="width: 150px;" readonly />
                     </div>
                 </div>
 
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary">Xác nhận Kết xuất</button>
+                <div class="text-center mt-4 border-top pt-3">
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">Xác nhận Kết xuất</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Hủy bỏ</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    .border-bottom-only {
+        border: none;
+        border-bottom: 1px dotted #000;
+        background: transparent;
+        border-radius: 0;
+        outline: none;
+        box-shadow: none !important;
+    }
+
+        .border-bottom-only:focus {
+            border-bottom: 2px solid #0056b3;
+        }
+
+    select.border-bottom-only {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-left: 0;
+        cursor: pointer;
+    }
+</style>
+
+@section Scripts {
+    <script src="~/js/phieubaohanhkho.js" asp-append-version="true"></script>
+}

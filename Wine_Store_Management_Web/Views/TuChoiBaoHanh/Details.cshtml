@@ -1,0 +1,113 @@
+﻿@model Wine_Store_Management_Web.Models.TuchoiBaohanh
+
+@{
+    ViewData["Title"] = "In Phiếu Từ Chối Bảo Hành BH_BM4";
+}
+
+<div class="container my-5 d-flex justify-content-center">
+    <div style="width: 820px;">
+        <div class="p-5 bg-white border border-dark position-relative shadow-sm" style="min-height: 500px;">
+            <p class="position-absolute top-0 start-0 m-3 small text-muted d-print-none">Mẫu: BH_BM4</p>
+
+            <h4 class="text-center fw-bold mb-2 text-uppercase tracking-wide" style="color: #000;">PHIẾU TỪ CHỐI BẢO HÀNH</h4>
+            <p class="text-center fst-italic mb-4" style="font-size: 0.95rem;">
+                Ngày lập phiếu: ngày @Model.NgayLapPhieu.Day tháng @Model.NgayLapPhieu.Month năm @Model.NgayLapPhieu.Year
+            </p>
+
+            <div class="mb-4" style="line-height: 2.2; font-size: 1.05rem;">
+                <div class="row">
+                    <div class="col-5 d-flex">
+                        <span>- Mã KH:</span>
+                        <span class="border-dotted flex-grow-1 ps-2">@Model.MaKhachHang</span>
+                    </div>
+                    <div class="col-7 d-flex">
+                        <span>Họ tên KH:</span>
+                        <span class="border-dotted flex-grow-1 ps-2 fw-bold">@Model.MaKhachHangNavigation?.HoTen</span>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-5 d-flex">
+                        <span>- Mã sản phẩm:</span>
+                        <span class="border-dotted flex-grow-1 ps-2">@Model.MaSanPham</span>
+                    </div>
+                    <div class="col-7 d-flex">
+                        <span>Tên sản phẩm:</span>
+                        <span class="border-dotted flex-grow-1 ps-2">@Model.MaSanPhamNavigation?.TenSanPham</span>
+                    </div>
+                </div>
+
+                <div class="d-flex mt-2">
+                    <span>- Số seri sản phẩm:</span>
+                    <span class="border-dotted flex-grow-1 ps-2 fw-bold text-monospace">@Model.SoSeri</span>
+                </div>
+            </div>
+
+            <div class="mb-4" style="font-size: 1.05rem;">
+                <label class="fw-bold mb-2">Lý do từ chối bảo hành (Hệ thống ghi nhận vi phạm):</label>
+
+                <div class="ps-3" style="line-height: 2;">
+                    <div>
+                        <span class="fs-5 me-1">@(Model.LyDoTuChoi.Contains("hết hạn") ? "☑" : "☐")</span>
+                        Sản phẩm hết hạn bảo hành theo quy định hệ thống.
+                    </div>
+                    <div>
+                        <span class="fs-5 me-1">@(Model.LyDoTuChoi.Contains("rơi vỡ") ? "☑" : "☐")</span>
+                        Hư hỏng do rơi vỡ / vô nước / lỗi từ phía người dùng.
+                    </div>
+                    <div>
+                        <span class="fs-5 me-1">@(Model.LyDoTuChoi.Contains("Mất tem") ? "☑" : "☐")</span>
+                        Mất tem niêm phong / không có hóa đơn / mua ngoài hệ thống.
+                    </div>
+                    <div>
+                        <span class="fs-5 me-1">@(!Model.LyDoTuChoi.Contains("hết hạn") && !Model.LyDoTuChoi.Contains("rơi vỡ") && !Model.LyDoTuChoi.Contains("Mất tem") ? "☑" : "☐")</span>
+                        <span class="fst-italic text-decoration-underline">Lý do cụ thể:</span>
+                        <span class="fw-bold">@Model.LyDoTuChoi</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 d-flex" style="font-size: 1.05rem;">
+                <span class="fw-bold text-nowrap">Bằng chứng đính kèm:</span>
+                <span class="border-dotted flex-grow-1 ps-2 text-primary fst-italic">@(string.IsNullOrEmpty(Model.BangChungDinhKem) ? "Không có dữ liệu đính kèm" : Model.BangChungDinhKem)</span>
+            </div>
+
+            <div class="row text-center mt-5 pt-3">
+                <div class="col-6 offset-6">
+                    <p class="fw-bold m-0" style="font-size: 1.05rem;">Người xác nhận từ chối (Thu ngân)</p>
+                    <small class="fst-italic text-muted d-block mb-5">(Ký, ghi rõ họ tên)</small>
+                    <p class="fw-bold mt-4 border-dotted d-inline-block px-3">@Model.ThuNganXacNhanNavigation?.HoTen</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4 d-print-none">
+            <button onclick="window.print()" class="btn btn-dark px-4 py-2"><i class="bi bi-printer"></i> In phiếu BH_BM4</button>
+            <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 ms-2">Xem lịch sử</a>
+            <a asp-controller="TiepNhanBaoHanh" asp-action="Index" class="btn btn-outline-danger px-4 py-2 ms-2">Bảo hành chung</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-dotted {
+        border-bottom: 1px dotted #000;
+        font-weight: 500;
+    }
+
+    @@media print {
+        header, footer, .d-print-none {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .border {
+            border: none !important;
+        }
+    }
+</style>

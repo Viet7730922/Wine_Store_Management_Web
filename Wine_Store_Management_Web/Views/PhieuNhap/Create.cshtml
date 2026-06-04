@@ -1,77 +1,106 @@
 ﻿@model Wine_Store_Management_Web.Models.Phieunhap
 
 @{
-    ViewData["Title"] = "KHO_BM2 - Phiếu Nhập Kho";
+    ViewData["Title"] = "KHO_BM2 - Lập Phiếu Nhập Kho";
 }
 
 <div class="container mt-4">
     <div class="card shadow">
-        <div class="card-body p-4">
+        <div class="card-body p-5" style="color: #000; font-family: 'Times New Roman', Times, serif;">
+
             <div class="text-center mb-4">
-                <h6 class="m-0">Cửa Hàng Chilliquer Số 138, đường Mai Xuân Thưởng, Phường Nha Trang,Khánh Hòa</h6>
-                <h4 class="fw-bold mt-2 mb-1">PHIẾU NHẬP KHO</h4>
-                <p class="m-0">Ngày <input asp-for="NgayNhap" type="date" class="form-control form-control-sm d-inline-block w-auto" value="@DateTime.Now.ToString("yyyy-MM-dd")" /></p>
-                <p class="m-0 fw-bold">Mã Số: <input asp-for="MaPhieuNhap" class="form-control form-control-sm d-inline-block w-auto" placeholder="VD: NK00012" /></p>
+                <h5 class="fw-bold m-0 text-uppercase">Cửa Hàng Chilliquer</h5>
+                <p class="m-0 small">Số 138, đường Mai Xuân Thưởng, Phường Nha Trang, Khánh Hòa</p>
+                <hr style="border-top: 1px dashed #000;" />
+                <h4 class="fw-bold mt-3 mb-1 text-uppercase">PHIẾU NHẬP KHO</h4>
+
+                <div class="d-flex justify-content-center g-2 mt-2">
+                    <span class="me-2 fw-bold">Ngày nhập:</span>
+                    <input asp-for="NgayNhap" type="date" class="form-control form-control-sm d-inline-block w-auto border-0 bg-transparent fw-bold" readonly />
+                </div>
+                <p class="m-0 mt-1 fw-bold">Mã Số: <input asp-for="MaPhieuNhap" class="form-control form-control-sm d-inline-block w-auto bg-light text-center text-danger fw-bold" readonly /></p>
             </div>
 
             <form asp-action="Create" method="post">
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">- Nhà cung cấp:</label>
-                        <input asp-for="NhaCungCap" class="form-control" placeholder="CÔNG TY..." />
+                <div asp-validation-summary="All" class="text-danger fw-bold small mb-3"></div>
+
+                <div class="row g-3 mb-4" style="font-size: 1.1rem;">
+                    <div class="col-md-6 d-flex">
+                        <span class="text-nowrap fw-bold">- Nhà cung cấp:</span>
+                        <input asp-for="NhaCungCap" class="form-control border-bottom-only flex-grow-1 ms-2" placeholder="Nhập tên nhà cung cấp..." required />
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">- Nhập tại kho:</label>
-                        <input asp-for="NhapTaiKho" class="form-control" value="Kho NVL 138 Mai Xuân Thưởng" />
+                    <div class="col-md-6 d-flex">
+                        <span class="text-nowrap fw-bold">- Nhập tại kho:</span>
+                        <input asp-for="NhapTaiKho" class="form-control border-bottom-only flex-grow-1 ms-2 bg-light" readonly />
                     </div>
                 </div>
 
-                <table class="table table-bordered align-middle text-center" id="nhapKhoTable">
-                    <thead class="table-light">
+                <div class="d-flex justify-content-between mb-2">
+                    <h6 class="fw-bold m-0"><i class="bi bi-list-stars"></i> Danh mục sản phẩm rượu nhập:</h6>
+                    <button type="button" class="btn btn-sm btn-success d-print-none" id="btnAddRow"><i class="bi bi-plus-circle"></i> Thêm dòng</button>
+                </div>
+
+                <table class="table table-bordered align-middle text-center border-dark" id="nhapKhoTable" style="font-size: 1rem;">
+                    <thead class="table-light border-dark fw-bold">
                         <tr>
                             <th style="width: 5%">STT</th>
-                            <th>Tên Sản Phẩm</th>
-                            <th style="width: 15%">Mã Sản Phẩm</th>
-                            <th style="width: 10%">Đơn Vị Tính</th>
-                            <th style="width: 12%">Số Lượng</th>
-                            <th style="width: 15%">Đơn Giá</th>
+                            <th style="width: 30%">Mã Sản Phẩm / Tên Rượu</th>
+                            <th style="width: 25%">Tên Mặt Hàng Hệ Thống</th>
+                            <th style="width: 12%">Đơn Vị Tính</th>
+                            <th style="width: 10%">Số Lượng</th>
+                            <th style="width: 13%">Đơn Giá Nhập</th>
+                            <th style="width: 5%" class="d-print-none">Xóa</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1</td>
-                            <td><input class="form-control form-control-sm text-start" readonly placeholder="Hệ thống tự load" /></td>
-                            <td><input name="ChiTietPhieuNhaps[0].MaSanPham" class="form-control form-control-sm text-center" required /></td>
-                            <td><input class="form-control form-control-sm text-center" readonly /></td>
-                            <td><input name="ChiTietPhieuNhaps[0].SoLuong" type="number" class="form-control form-control-sm text-center" value="1" min="1" /></td>
-                            <td><input name="ChiTietPhieuNhaps[0].DonGia" type="number" step="0.01" class="form-control form-control-sm text-end" required /></td>
+                            <td class="row-stt">1</td>
+                            <td>
+                                <select name="ChiTietPhieuNhaps[0].MaSanPham" class="form-select form-select-sm sp-select" required>
+                                    <option value="">-- Chọn sản phẩm rượu --</option>
+                                    @if (ViewBag.SanPhams != null)
+                                    {
+                                        foreach (var sp in ViewBag.SanPhams)
+                                        {
+                                            <option value="@sp.MaSanPham" data-ten="@sp.TenSanPham" data-dvt="@sp.DonViTinh">@sp.MaSanPham - @sp.TenSanPham</option>
+                                        }
+                                    }
+                                </select>
+                            </td>
+                            <td><input class="form-control form-control-sm text-start border-0 bg-transparent sp-ten" readonly placeholder="Hệ thống tự load..." /></td>
+                            <td><input class="form-control form-control-sm text-center border-0 bg-transparent sp-dvt" readonly placeholder="Tự load" /></td>
+                            <td><input name="ChiTietPhieuNhaps[0].SoLuong" type="number" class="form-control form-control-sm text-center sp-soluong" value="1" min="1" required /></td>
+                            <td><input name="ChiTietPhieuNhaps[0].DonGia" type="number" class="form-control form-control-sm text-end sp-gia" placeholder="0" min="0" required /></td>
+                            <td class="d-print-none"><button type="button" class="btn btn-sm btn-outline-danger btn-remove-row" disabled><i class="bi bi-trash"></i></button></td>
                         </tr>
                     </tbody>
                 </table>
 
-                <div class="row g-3 mt-2 mb-4">
-                    <div class="col-12">
-                        <label class="form-label fw-bold">- Tổng số tiền (Viết bằng chữ):</label>
-                        <input asp-for="TongTienVietBangChu" class="form-control border-bottom-only" placeholder=".........................................................................................." readonly />
+                <div class="row g-3 mt-3 mb-4" style="font-size: 1.1rem;">
+                    <div class="col-12 d-flex">
+                        <span class="text-nowrap fw-bold">- Tổng số tiền (Viết bằng chữ):</span>
+                        <input asp-for="TongTienVietBangChu" id="TongTienVietBangChu" class="form-control border-bottom-only flex-grow-1 ms-2 text-primary fw-bold fst-italic" placeholder="Không đồng." readonly />
                     </div>
-                    <div class="col-12">
-                        <label class="form-label fw-bold">- Số chứng từ gốc kèm theo:</label>
-                        <input asp-for="SoChungTuGoc" class="form-control border-bottom-only" placeholder=".............................................................................................." />
+                    <div class="col-12 d-flex">
+                        <span class="text-nowrap fw-bold">- Số chứng từ gốc kèm theo:</span>
+                        <input asp-for="SoChungTuGoc" class="form-control border-bottom-only flex-grow-1 ms-2" placeholder="Ghi chú hóa đơn đỏ, số chứng từ kèm theo..." />
                     </div>
                 </div>
 
-                <div class="row text-center mt-5 mb-4">
+                <div class="row text-center mt-5 mb-4" style="font-size: 1.1rem;">
                     <div class="col-6 offset-6">
-                        <p class="m-0">Ngày..... tháng..... năm.....</p>
-                        <p class="fw-bold m-0">Người nhập kho</p>
+                        <p class="m-0 fst-italic">Ngày @DateTime.Now.Day tháng @DateTime.Now.Month năm @DateTime.Now.Year</p>
+                        <p class="fw-bold m-0 mt-1">Người nhập kho</p>
                         <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
-                        <input asp-for="NguoiNhapKho" type="text" class="form-control form-control-sm w-50 mx-auto text-center" placeholder="Mã nhân viên" />
+                        <select asp-for="NguoiNhapKho" class="form-select form-select-sm w-50 mx-auto text-center border-bottom-only fw-bold" required>
+                            <option value="NV04">Nguyễn Văn Kho (NV04)</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="text-center mt-4 border-top pt-3">
-                    <button type="submit" class="btn btn-success px-5">Lưu Phiếu Nhập Kho</button>
-                    <a asp-action="Index" class="btn btn-secondary px-4">Quay lại</a>
+                <div class="text-center mt-5 border-top pt-3 d-print-none">
+                    <button type="submit" class="btn btn-success px-5 py-2 fw-bold">Lưu Phiếu Nhập Kho & In</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4 py-2 ms-2">Quay lại lịch sử</a>
                 </div>
             </form>
         </div>
@@ -84,5 +113,19 @@
         border-bottom: 1px dotted #000;
         border-radius: 0;
         background-color: transparent;
+        box-shadow: none !important;
+    }
+
+        .border-bottom-only:focus {
+            border-bottom: 2px solid #198754;
+        }
+
+    select.border-bottom-only {
+        appearance: none;
+        -webkit-appearance: none;
     }
 </style>
+
+@section Scripts {
+    <script src="~/js/phieunhapkho.js" asp-append-version="true"></script>
+}

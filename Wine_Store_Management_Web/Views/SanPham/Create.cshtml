@@ -17,13 +17,19 @@
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label asp-for="MaSanPham" class="form-label font-weight-bold">Mã sản phẩm:</label>
-                        <input asp-for="MaSanPham" class="form-control" placeholder="Nhập mã SP..." />
+                        <input asp-for="MaSanPham" class="form-control" placeholder="Nhập mã SP..." required />
                         <span asp-validation-for="MaSanPham" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-8">
+                    <div class="col-md-4">
+                        <label asp-for="SoSeri" class="form-label font-weight-bold">Số Seri sản phẩm (16 số):</label>
+                        <input asp-for="SoSeri" class="form-control" maxlength="16" minlength="16" pattern="\d{16}" title="Vui lòng nhập chính xác dãy số gồm 16 chữ số" placeholder="VD: 5000281001234567" required />
+                        <span asp-validation-for="SoSeri" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
                         <label asp-for="TenSanPham" class="form-label font-weight-bold">Tên sản phẩm:</label>
-                        <input asp-for="TenSanPham" class="form-control" placeholder="Nhập tên sản phẩm rượu..." />
+                        <input asp-for="TenSanPham" class="form-control" placeholder="Nhập tên sản phẩm rượu..." required />
                         <span asp-validation-for="TenSanPham" class="text-danger"></span>
                     </div>
 

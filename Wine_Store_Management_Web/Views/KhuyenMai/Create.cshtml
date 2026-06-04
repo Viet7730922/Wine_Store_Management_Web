@@ -11,6 +11,9 @@
         </div>
         <div class="card-body p-4">
             <form asp-action="Create" method="post">
+
+                <div asp-validation-summary="All" class="text-danger fw-bold text-center mb-3"></div>
+
                 <div class="row g-4">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Mã chương trình ưu đãi:</label>
@@ -63,7 +66,7 @@
 
                 <div class="row mt-5 text-center">
                     <div class="col-md-6 offset-md-6">
-                        <p class="m-0">Ngày <input asp-for="NgayDuyet" type="date" class="form-control form-control-sm d-inline w-auto border-0 bg-transparent fw-bold" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly /></p>
+                        <p class="m-0">Ngày <input asp-for="NgayDuyet" type="date" class="form-control form-control-sm d-inline w-auto border-0 bg-transparent fw-bold" readonly /></p>
                         <p class="fw-bold m-0 mt-2">Người phê duyệt chương trình</p>
                         <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
                         <input asp-for="NguoiPheDuyet" class="form-control w-50 mx-auto text-center border-bottom-only" placeholder="Mã NV Quản lý" />

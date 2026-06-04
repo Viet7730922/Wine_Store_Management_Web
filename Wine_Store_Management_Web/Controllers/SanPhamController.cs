@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Wine_Store_Management_Web.Data;
 using Wine_Store_Management_Web.Models;
 
@@ -8,7 +12,6 @@ namespace Wine_Store_Management_Web.Controllers
     {
         private readonly QLChilliquerContext _context;
 
-        // Tiêm DbContext vào Controller để tương tác với cơ sở dữ liệu
         public SanPhamController(QLChilliquerContext context)
         {
             _context = context;
@@ -30,9 +33,10 @@ namespace Wine_Store_Management_Web.Controllers
         // Xử lý luồng dữ liệu khi người dùng nhấn nút lưu sản phẩm
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaSanPham,TenSanPham,LoaiSanPham,HangSanXuat,XuatXu,DonViTinh,GiaNhap,GiaBanDeXuat,ThoiHanBaoHanh,MoTa,NguoiLapPhieu,NgayTao")] Sanpham sanPham)
+        // BỔ SUNG: Đã thêm SoSeri vào danh sách gán dữ liệu tự động Bind
+        public async Task<IActionResult> Create([Bind("MaSanPham,SoSeri,TenSanPham,LoaiSanPham,HangSanXuat,XuatXu,DonViTinh,GiaNhap,GiaBanDeXuat,ThoiHanBaoHanh,MoTa,NguoiLapPhieu,NgayTao")] Sanpham sanPham)
         {
-            // Remove navigation properties - chỉ cần FK, không cần object
+            // Remove các thuộc tính điều hướng ảo để tránh lỗi ModelState ngầm
             ModelState.Remove("NguoiLapPhieuNavigation");
             ModelState.Remove("ChitietHoadons");
             ModelState.Remove("ChitietKiemkes");
@@ -45,7 +49,14 @@ namespace Wine_Store_Management_Web.Controllers
             {
                 try
                 {
-                    // Kiểm tra trùng lặp mã sản phẩm trong hệ thống
+                    // 1. Kiểm tra định dạng số Seri (Chỉ chấp nhận chuỗi chứa đúng 16 ký số)
+                    if (!string.IsNullOrEmpty(sanPham.SoSeri) && (sanPham.SoSeri.Length != 16 || !sanPham.SoSeri.All(char.IsDigit)))
+                    {
+                        ModelState.AddModelError("SoSeri", "Số Seri sản phẩm bắt buộc phải bao gồm đúng 16 ký số liên tiếp (không chứa chữ hay ký tự đặc biệt)!");
+                        return View(sanPham);
+                    }
+
+                    // 2. Kiểm tra trùng lặp mã sản phẩm trong hệ thống
                     var existingProduct = await _context.SanPhams.FindAsync(sanPham.MaSanPham);
                     if (existingProduct != null)
                     {
@@ -53,15 +64,14 @@ namespace Wine_Store_Management_Web.Controllers
                         return View(sanPham);
                     }
 
-                    // Thiết lập các thông số mặc định không hiển thị trên biểu mẫu nhập liệu
-                    sanPham.SoLuongTon = 0; // Sản phẩm mới tạo mặc định tồn kho bằng 0 (chờ phiếu nhập)
-                    sanPham.TrangThai = "Kích hoạt"; // Trạng thái mặc định khi đưa vào kinh doanh
+                    // Thiết lập thông số mặc định hệ thống
+                    sanPham.SoLuongTon = 0;
+                    sanPham.TrangThai = "Kích hoạt";
 
                     // Lưu thực thể vào bảng SANPHAM
                     _context.Add(sanPham);
                     await _context.SaveChangesAsync();
 
-                    // Chuyển hướng về trang danh sách sau khi lưu thành công
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -69,7 +79,6 @@ namespace Wine_Store_Management_Web.Controllers
                     ModelState.AddModelError("", "Đã xảy ra lỗi khi lưu dữ liệu: " + ex.Message);
                 }
             }
-            // Trả về view kèm thông báo lỗi nếu dữ liệu không hợp lệ
             return View(sanPham);
         }
 
