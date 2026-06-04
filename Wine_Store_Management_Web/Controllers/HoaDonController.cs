@@ -85,6 +85,11 @@ namespace Wine_Store_Management_Web.Controllers
             ModelState.Remove("KhachHang");
             ModelState.Remove("KhuyenMai");
             ModelState.Remove("NhanVienThuNgan");
+            ModelState.Remove("ChitietHoadons");
+            ModelState.Remove("TiepnhanBaohanhs");
+            ModelState.Remove("ThuNganNavigation");
+            ModelState.Remove("MaKhachHangNavigation");
+            ModelState.Remove("MaKhuyenMaiNavigation");
 
             for (int i = 0; i < ChiTietHoaDons.Count; i++)
             {
@@ -229,7 +234,8 @@ namespace Wine_Store_Management_Web.Controllers
         public IActionResult Index()
         {
             var danhSachHoaDon = _context.HoaDons
-                .Include(h => h.MaKhachHang) // Ép tải dữ liệu khách hàng liên kết
+                .Include(h => h.MaKhachHangNavigation)
+                // Ép tải dữ liệu khách hàng liên kết
                 .OrderByDescending(h => h.NgayHoaDon)
                 .ToList();
             return View(danhSachHoaDon);

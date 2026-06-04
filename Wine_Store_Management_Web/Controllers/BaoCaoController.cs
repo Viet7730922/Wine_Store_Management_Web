@@ -88,16 +88,13 @@ namespace Wine_Store_Management_Web.Controllers
                 .ToListAsync();
 
             // Nhóm dữ liệu theo ngày (Group By) để tính tổng
-            var thongKeTheoNgay = hoaDons.GroupBy(h => h.NgayHoaDon.Day)
+            var thongKeTheoNgay = hoaDons.GroupBy(h => h.NgayHoaDon)
                 .Select(g => new
                 {
                     NgayThang = g.Key.ToString("dd/MM/yyyy"),
                     SoDonHang = g.Count(),
-                    // Tổng doanh thu = Tổng (Số lượng * Đơn giá bán)
                     TongDoanhThu = g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.DonGia)),
-                    // Tổng chi phí vốn = Tổng (Số lượng * Giá nhập kho)
                     TongChiPhiVon = g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.MaSanPhamNavigation!.GiaNhap)),
-                    // Lợi nhuận = Doanh thu - Chi phí vốn
                     LoiNhuan = g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.DonGia))
                              - g.Sum(h => h.ChitietHoadons.Sum(c => c.SoLuong * c.MaSanPhamNavigation!.GiaNhap))
                 }).OrderBy(x => x.NgayThang).ToList();

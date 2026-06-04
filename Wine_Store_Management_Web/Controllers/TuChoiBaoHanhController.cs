@@ -24,6 +24,9 @@ namespace Wine_Store_Management_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NgayLapPhieu,MaKhachHang,MaSanPham,SoSeri,LyDoTuChoi,BangChungDinhKem,ThuNganXacNhan")] TuchoiBaohanh tuChoi)
         {
+            ModelState.Remove("MaKhachHangNavigation");
+            ModelState.Remove("MaSanPhamNavigation");
+            ModelState.Remove("ThuNganXacNhanNavigation");
             if (ModelState.IsValid)
             {
                 try
