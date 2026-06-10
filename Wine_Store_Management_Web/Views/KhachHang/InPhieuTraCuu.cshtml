@@ -1,0 +1,255 @@
+﻿@model Wine_Store_Management_Web.Models.Khachhang
+
+@{
+    Layout = null; // Tắt layout chung của website để đảm bảo trang in sạch hoàn toàn
+    var transactions = ViewBag.RecentTransactions as List<Wine_Store_Management_Web.Models.Hoadon>;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>BH_BM2 - Phiếu Tra Cứu Khách Hàng Thân Thiết</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+            body {
+                font-family: "Times New Roman", Times, serif;
+                color: #000;
+                background-color: #fff;
+                padding: 40px 50px;
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+            .print-container {
+                max-width: 750px;
+                margin: 0 auto;
+            }
+
+            /* Phần header tiêu đề */
+            .header-section {
+                text-align: center;
+                margin-bottom: 25px;
+            }
+
+            .form-title {
+                font-weight: bold;
+                font-size: 22px;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+            }
+
+            .form-time {
+                font-style: italic;
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+
+            .search-keyword-line {
+                text-align: left;
+                font-size: 16px;
+                margin-top: 10px;
+            }
+
+            /* Khối hệ thống phản hồi thông tin */
+            .response-section {
+                margin-top: 25px;
+                margin-bottom: 20px;
+            }
+
+            .response-title {
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-bottom: 12px;
+            }
+
+            .info-line {
+                margin-bottom: 10px;
+                display: flex;
+                align-items: baseline;
+            }
+
+            .info-text-full {
+                width: 100%;
+                display: flex;
+                align-items: baseline;
+            }
+
+            /* Cấu trúc hàng ghép: Ngày đăng ký và Hạng thành viên nằm chung dòng */
+            .info-row-split {
+                display: flex;
+                width: 100%;
+                justify-content: geopolitical;
+                align-items: baseline;
+                margin-bottom: 10px;
+            }
+
+            .dot-leader {
+                border-bottom: 1px dotted #000;
+                flex-grow: 1;
+                margin-left: 5px;
+                margin-right: 5px;
+                padding-left: 8px;
+                font-weight: bold;
+            }
+
+            /* Khối hiển thị điểm tích lũy và dòng quy đổi thụt lề bên dưới */
+            .points-block {
+                margin-bottom: 10px;
+            }
+
+            .exchange-line {
+                padding-left: 20px; /* Thụt đầu dòng dòng quy đổi khả dụng theo file .docx */
+                margin-top: 5px;
+                display: flex;
+                align-items: baseline;
+            }
+
+            .table-title {
+                font-weight: bold;
+                font-style: italic;
+                margin-top: 25px;
+                margin-bottom: 10px;
+            }
+
+            /* Thiết kế bảng danh sách giao dịch sạch */
+            .history-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 30px;
+            }
+
+                .history-table th, .history-table td {
+                    border: 1px solid #000;
+                    padding: 8px 10px;
+                    text-align: center;
+                }
+
+                .history-table th {
+                    font-weight: bold;
+                    background-color: #f2f2f2 !important;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+
+            /* Đường phân cách nét đứt dài */
+            .divider-dashed {
+                border-top: 1px dashed #000;
+                margin-top: 40px;
+                margin-bottom: 15px;
+                width: 100%;
+            }
+
+            /* Khu vực ký tên thu ngân dưới cùng bên trái */
+            .footer-section {
+                display: flex;
+                justify-content: flex-start;
+                align-items: baseline;
+                font-size: 16px;
+            }
+
+            .cashier-label {
+                font-weight: bold;
+                white-space: nowrap;
+            }
+    </style>
+    <script>
+            // Tự động kích hoạt trình in hệ thống khi load xong trang
+            window.onload = function () {
+                window.print();
+            };
+    </script>
+</head>
+<body>
+
+    <div class="print-container">
+
+        <div class="header-section">
+            <div class="form-title">PHIẾU TRA CỨU KHÁCH HÀNG THÂN THIẾT</div>
+            <div class="form-time">
+                Thời gian tra cứu: @DateTime.Now.ToString("HH") : @DateTime.Now.ToString("mm") Ngày @DateTime.Now.ToString("dd/MM/yyyy")
+            </div>
+            <div class="search-keyword-line">
+                Từ khóa tìm kiếm (SĐT/Mã KH): <span class="fw-bold text-decoration-underline">@ViewBag.Keyword</span>
+            </div>
+        </div>
+
+        <div class="response-section">
+            <div class="response-title">HỆ THỐNG PHẢN HỒI THÔNG TIN:</div>
+
+            <div class="info-line">
+                <span>- Mã khách hàng:</span>
+                <span class="dot-leader">@Model.MaKhachHang</span>
+            </div>
+
+            <div class="info-line">
+                <span>- Họ và tên:</span>
+                <span class="dot-leader">@Model.HoTen</span>
+            </div>
+
+            <div class="info-row-split">
+                <div style="display: flex; flex-grow: 1; align-items: baseline;">
+                    <span>- Ngày đăng ký thẻ:</span>
+                    <span class="dot-leader">@Model.NgayDangKyThe.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div style="display: flex; flex-grow: 1; align-items: baseline; padding-left: 15px;">
+                    <span>Hạng thành viên:</span>
+                    <span class="dot-leader">@Model.HangThanhVien</span>
+                </div>
+            </div>
+
+            <div class="points-block">
+                <div class="info-line">
+                    <span>- Số điểm tích lũy hiện tại:</span>
+                    <span class="dot-leader">@Model.DiemTichLuy</span>
+                    <span>Điểm</span>
+                </div>
+                <div class="exchange-line">
+                    <span>(Giá trị quy đổi khả dụng:</span>
+                    <span class="dot-leader">@string.Format("{0:N0}", (Model.DiemTichLuy ?? 0) * 5000)</span>
+                    <span>VNĐ)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-title">* Lịch sử 3 giao dịch gần nhất của khách hàng:</div>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Ngày</th>
+                    <th style="width: 35%;">Số Hóa Đơn</th>
+                    <th style="width: 35%;">Tổng tiền (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (transactions != null && transactions.Any())
+                {
+                    foreach (var hd in transactions)
+                    {
+                        <tr>
+                            <td>@hd.NgayHoaDon.ToString("dd/MM/yyyy")</td>
+                            <td>@hd.SoHoaDon</td>
+                            <td>@string.Format("{0:N0}", hd.TongTienVietBangChu)</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" style="font-style: italic; color: #555;">Chưa ghi nhận lịch sử giao dịch phát sinh</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="divider-dashed"></div>
+
+        <div class="footer-section">
+            <span class="cashier-label">Thu ngân thực hiện tra cứu:</span>
+            <span class="dot-leader" style="margin-left: 10px;">@ViewBag.TenThuNgan</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

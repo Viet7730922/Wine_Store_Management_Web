@@ -13,12 +13,20 @@ namespace Wine_Store_Management_Web.Controllers
             _context = context;
         }
 
-        // GET: KhachHang/TraCuuNhanh (Dành cho Thu ngân - Biểu mẫu BH_BM2)
         // Sơ đồ DFD 1.3.9
+        // GET: KhachHang/TraCuuNhanh (Dành cho Thu ngân - Biểu mẫu BH_BM2)
         [HttpGet]
         public async Task<IActionResult> TraCuuNhanh(string keyword)
         {
             ViewBag.Keyword = keyword;
+
+            // TỰ ĐỘNG LẤY TÊN NHÂN VIÊN NV02 TỪ DATABASE
+            // Hệ thống dựa vào DbSet NhanViens (hoặc tên tương ứng trong QLChilliquerContext của bạn)
+            var nhanVienDefault = await _context.NhanViens
+                .FirstOrDefaultAsync(nv => nv.MaNhanVien == "NV02");
+
+            // Lưu tên nhân viên vào ViewBag để truyền ra hiển thị trên Form
+            ViewBag.TenThuNgan = nhanVienDefault != null ? nhanVienDefault.HoTen : "Nhân viên NV02";
 
             if (string.IsNullOrEmpty(keyword))
             {
@@ -35,17 +43,43 @@ namespace Wine_Store_Management_Web.Controllers
                 return View();
             }
 
-            // Lấy 3 giao dịch gần nhất của khách hàng kèm chi tiết để tính tổng tiền
+            // Lấy 3 giao dịch gần nhất của khách hàng để hiển thị lên phiếu tra cứu
             var recentTransactions = await _context.HoaDons
-                .Include(h => h.ChitietHoadons)
                 .Where(h => h.MaKhachHang == khachHang.MaKhachHang)
                 .OrderByDescending(h => h.NgayHoaDon)
                 .Take(3)
                 .ToListAsync();
 
-            // Tính tổng tiền cho từng hóa đơn và lưu tạm vào GhiChu (hoặc có thể dùng ViewModel)
-            // Để tiện hiển thị ra View, ta tạm dùng Viewbag truyền danh sách gốc qua
             ViewBag.RecentTransactions = recentTransactions;
+
+            return View(khachHang);
+        }
+
+        // GET: KhachHang/InPhieuTraCuu (Màn hình xem trước và gọi hộp thoại in ấn hệ thống)
+        [HttpGet]
+        public async Task<IActionResult> InPhieuTraCuu(string maKH, string tenThuNgan)
+        {
+            if (string.IsNullOrEmpty(maKH))
+            {
+                return RedirectToAction(nameof(TraCuuNhanh));
+            }
+
+            var khachHang = await _context.KhachHangs
+                .FirstOrDefaultAsync(k => k.MaKhachHang == maKH);
+
+            if (khachHang == null)
+            {
+                return NotFound();
+            }
+
+            var recentTransactions = await _context.HoaDons
+                .Where(h => h.MaKhachHang == khachHang.MaKhachHang)
+                .OrderByDescending(h => h.NgayHoaDon)
+                .Take(3)
+                .ToListAsync();
+
+            ViewBag.RecentTransactions = recentTransactions;
+            ViewBag.TenThuNgan = tenThuNgan; // Nhận trực tiếp tên được nút chuyển sang đẩy vào phôi in [cite: 53]
 
             return View(khachHang);
         }

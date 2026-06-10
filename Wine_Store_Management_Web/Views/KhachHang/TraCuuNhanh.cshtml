@@ -76,12 +76,23 @@
                 </table>
 
                 <hr class="mt-4 border-2" />
-                <div class="text-end">
-                    <label class="fw-bold">Thu ngân thực hiện tra cứu:</label>
-                    <input type="text" class="form-control d-inline w-25 border-bottom-only" value="@User.Identity?.Name" readonly />
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-action="InPhieuTraCuu"
+                       asp-route-maKH="@Model.MaKhachHang"
+                       asp-route-tenThuNgan="@ViewBag.TenThuNgan"
+                       target="_blank"
+                       class="btn btn-success fw-bold px-4">
+                        <i class="bi bi-printer-fill"></i> Xuất & In Phiếu (BH_BM2)
+                    </a>
+
+                    <div class="text-end" style="min-width: 350px;">
+                        <label class="fw-bold text-secondary">Thu ngân thực hiện tra cứu:</label>
+                        <input type="text" class="form-control d-inline w-50 text-center border-bottom-only fw-bold color-dark" value="@ViewBag.TenThuNgan" readonly />
+                    </div>
                 </div>
             }
         </div>
+
     </div>
 </div>
 

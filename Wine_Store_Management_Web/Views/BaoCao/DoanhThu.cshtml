@@ -2,88 +2,262 @@
 
 @{
     ViewData["Title"] = "QLCH_BM5 - Báo Cáo Doanh Thu";
+    Layout = null; // Tắt layout hệ thống để trang in sạch hoàn toàn
 }
 
-<div class="container mt-4">
-    <div class="card shadow border-danger">
-        <div class="card-body p-5">
-            <h5 class="fw-bold mb-4">Số 138, đường Mai Xuân Thưởng, Phường Nha Trang, Khánh Hòa</h5>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>QLCH_BM5 - BÁO CÁO TỔNG HỢP DOANH THU VÀ LỢI NHUẬN</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+            body {
+                font-family: "Times New Roman", Times, serif;
+                color: #000;
+                background-color: #fff;
+                padding: 30px 45px;
+                font-size: 16px;
+                line-height: 1.6;
+            }
 
-            <h4 class="text-center fw-bold mb-2 text-danger">BÁO CÁO TỔNG HỢP DOANH THU VÀ LỢI NHUẬN</h4>
-            <div class="d-flex justify-content-between mb-4">
-                <p class="m-0 fw-bold">Mã báo cáo: BCDT_@DateTime.Now.ToString("yyyyMMdd")</p>
-                <p class="m-0">Khoảng thời gian theo dõi: Từ ngày @ViewBag.TuNgay đến ngày @ViewBag.DenNgay</p>
-            </div>
+            .report-container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
 
-            <form method="get" class="mb-4 d-flex justify-content-end d-print-none">
-                <div class="input-group w-50">
-                    <input type="date" name="tuNgay" class="form-control" value="@ViewBag.TuNgay_Input" required />
-                    <span class="input-group-text">-</span>
-                    <input type="date" name="denNgay" class="form-control" value="@ViewBag.DenNgay_Input" required />
-                    <button type="submit" class="btn btn-danger">Lọc dữ liệu</button>
-                </div>
-            </form>
+            /* Địa chỉ doanh nghiệp phía trên bên trái */
+            .store-address {
+                font-weight: bold;
+                font-size: 15px;
+                margin-bottom: 25px;
+                text-align: left;
+            }
 
-            <h6 class="fw-bold text-decoration-underline mb-3">BẢNG SỐ LIỆU TỔNG HỢP THEO NGÀY:</h6>
-            <table class="table table-bordered align-middle text-center">
-                <thead class="table-danger">
-                    <tr>
-                        <th style="width: 5%">STT</th>
-                        <th>Ngày/Tháng</th>
-                        <th>Số đơn hàng</th>
-                        <th>Tổng Doanh thu(VNĐ)</th>
-                        <th>Tổng chi phí vốn (VNĐ)</th>
-                        <th>Lợi thuận(VNĐ)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        int stt = 1;
-                        foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@stt</td>
-                                <td>@item.NgayThang</td>
-                                <td>@item.SoDonHang</td>
-                                <td class="text-end">@item.TongDoanhThu.ToString("N2")</td>
-                                <td class="text-end">@item.TongChiPhiVon.ToString("N2")</td>
-                                <td class="text-end fw-bold text-success">@item.LoiNhuan.ToString("N2")</td>
-                            </tr>
-                            stt++;
-                        }
-                    }
-                </tbody>
-            </table>
+            /* Tiêu đề văn bản báo cáo */
+            .report-title {
+                text-align: center;
+                font-weight: bold;
+                font-size: 22px;
+                text-transform: uppercase;
+                margin-bottom: 20px;
+            }
 
-            <div class="mt-4 p-3 bg-light border">
-                <h6 class="fw-bold text-danger text-decoration-underline">TỔNG KẾT CUỐI KỲ:</h6>
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="fw-bold">Tổng số đơn hàng bán ra:</span>
-                    <span class="border-bottom-only w-50 text-end pe-2">@ViewBag.TongDonHang</span> <span>đơn</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="fw-bold">Tổng doanh thu:</span>
-                    <span class="border-bottom-only w-50 text-end pe-2">@ViewBag.TongDoanhThu</span> <span>VNĐ</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span class="fw-bold">Tổng lợi nhuận thực tế:</span>
-                    <span class="border-bottom-only w-50 text-end pe-2 fw-bold text-success">@ViewBag.TongLoiNhuan</span> <span>VNĐ</span>
-                </div>
-            </div>
+            /* Thông tin định danh mã báo cáo và chu kỳ theo dõi */
+            .meta-info-line {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 25px;
+                font-size: 16px;
+            }
 
-            <div class="row text-center mt-5">
-                <div class="col-5 offset-7">
-                    <p class="m-0">Ngày @DateTime.Now.Day tháng @DateTime.Now.Month năm @DateTime.Now.Year</p>
-                    <p class="fw-bold m-0 mt-2">Người lập báo cáo</p>
-                    <small class="text-muted d-block mb-4">(Ký, họ tên)</small>
-                    <span class="border-bottom-only w-75 d-inline-block">@User.Identity?.Name</span>
-                </div>
-            </div>
+            .section-table-title {
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-top: 20px;
+                margin-bottom: 12px;
+            }
 
-            <div class="text-center mt-4 d-print-none border-top pt-3">
-                <button onclick="window.print()" class="btn btn-outline-danger px-4"><i class="bi bi-printer"></i> In Báo Cáo</button>
+            /* Định dạng bảng số liệu theo mẫu lưới đen mảnh của Word */
+            .report-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 30px;
+            }
+
+                .report-table th, .report-table td {
+                    border: 1px solid #000 !important;
+                    padding: 8px 6px;
+                    text-align: center;
+                    font-size: 15px;
+                }
+
+                .report-table th {
+                    font-weight: bold;
+                    background-color: #f2f2f2 !important;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+
+            /* Khối hiển thị tổng kết cuối kỳ định dạng chấm dài */
+            .summary-section {
+                margin-top: 25px;
+                margin-bottom: 30px;
+            }
+
+            .summary-title {
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-bottom: 12px;
+            }
+
+            .summary-line {
+                display: flex;
+                align-items: baseline;
+                margin-bottom: 8px;
+            }
+
+            .dot-leader {
+                border-bottom: 1px dotted #000;
+                flex-grow: 1;
+                margin-left: 5px;
+                margin-right: 5px;
+                padding-left: 10px;
+                font-weight: bold;
+            }
+
+            /* Cấu trúc ký tên phê duyệt biểu mẫu */
+            .footer-report {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                float: right;
+                text-align: center;
+                width: 320px;
+                margin-top: 20px;
+                font-size: 16px;
+            }
+
+            .signature-title {
+                font-weight: bold;
+                margin-top: 5px;
+            }
+
+            .signature-space {
+                margin-bottom: 65px; /* Khoảng trống ký tay */
+            }
+
+            .signature-name {
+                font-weight: bold;
+                border-bottom: 1px dotted #000;
+                display: inline-block;
+                min-width: 200px;
+                padding-bottom: 2px;
+            }
+
+            @@media print {
+                .no-print {
+                    display: none !important;
+                }
+
+                body {
+                    padding: 0;
+                }
+            }
+    </style>
+    <script>
+            // Kích hoạt ngay trình in biểu mẫu của hệ thống khi hoàn tất tải trang
+            window.onload = function () {
+                window.print();
+            };
+    </script>
+</head>
+<body>
+
+    <div class="report-container">
+
+        <div class="store-address">Số 138, đường Mai Xuân Thưởng, Phường Nha Trang, Khánh Hòa</div>
+
+        <div class="report-title">BÁO CÁO TỔNG HỢP DOANH THU VÀ LỢI NHUẬN</div>
+
+        <div class="meta-info-line">
+            <div>
+                <span class="fw-bold">Mã báo cáo:</span>
+                <span>BCDT_@DateTime.Now.ToString("yyyyMMdd")</span>
             </div>
         </div>
+        <div class="meta-info-line">
+            <span>Khoảng thời gian theo dõi: Từ ngày </span>
+            <span class="fw-bold">@ViewBag.TuNgay</span>
+            <span> đến ngày </span>
+            <span class="fw-bold">@ViewBag.DenNgay</span>
+        </div>
+
+        <div class="section-table-title">BẢNG SỐ LIỆU TỔNG HỢP THEO NGÀY:</div>
+
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">STT</th>
+                    <th style="width: 20%;">Ngày/Tháng</th>
+                    <th style="width: 17%;">Số đơn hàng</th>
+                    <th style="width: 20%;">Tổng Doanh thu (VNĐ)</th>
+                    <th style="width: 20%;">Tổng chi phí vốn (VNĐ)</th>
+                    <th style="width: 15%;">Lợi nhuận (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int stt = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@(stt++)</td>
+                            <td>@item.NgayThang</td>
+                            <td>@string.Format("{0:N0}", item.SoDonHang)</td>
+                            <td>@string.Format("{0:N0}", item.TongDoanhThu)</td>
+                            <td>@string.Format("{0:N0}", item.TongChiPhiVon)</td>
+                            <td class="fw-bold">@string.Format("{0:N0}", item.LoiNhuan)</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" style="font-style: italic;">Không tìm thấy dữ liệu báo cáo trong khoảng thời gian này</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="summary-section">
+            <div class="summary-title">TỔNG KẾT CUỐI KỲ:</div>
+
+            <div class="summary-line">
+                <span>- Tổng số đơn hàng bán ra:</span>
+                <span class="dot-leader">@string.Format("{0:N0}", ViewBag.TongDonHang)</span>
+                <span>đơn</span>
+            </div>
+
+            <div class="summary-line">
+                <span>- Tổng doanh thu:</span>
+                <span class="dot-leader">@ViewBag.TongDoanhThu</span>
+                <span>VNĐ</span>
+            </div>
+
+            <div class="summary-line">
+                <span>- Tổng lợi nhuận thực tế:</span>
+                <span class="dot-leader">@ViewBag.TongLoiNhuan</span>
+                <span>VNĐ</span>
+            </div>
+        </div>
+
+        <div class="footer-report">
+            <div>Ngày @DateTime.Now.ToString("dd") tháng @DateTime.Now.ToString("MM") năm @DateTime.Now.ToString("yyyy")</div>
+            <div class="signature-title">Người lập báo cáo</div>
+            <div class="text-muted signature-space">(Ký, họ tên)</div>
+            <div class="signature-name">@User.Identity?.Name</div>
+        </div>
+
     </div>
-</div>
+
+    <div class="container mt-3 mb-4 no-print">
+        <div class="d-flex justify-content-between align-items-center p-3 bg-light border rounded">
+            <a href="javascript:window.history.back();" class="btn btn-secondary fw-bold">
+                <i class="bi bi-arrow-left"></i> Quay lại giao diện
+            </a>
+            <form method="get" class="d-flex gap-2 m-0">
+                <input type="date" name="tuNgay" class="form-control" value="@ViewBag.TuNgay_Input" required />
+                <input type="date" name="denNgay" class="form-control" value="@ViewBag.DenNgay_Input" required />
+                <button type="submit" class="btn btn-danger fw-bold">Lọc dữ liệu</button>
+            </form>
+            <button onclick="window.print();" class="btn btn-success fw-bold">
+                <i class="bi bi-printer"></i> Tiến hành in
+            </button>
+        </div>
+        <hr />
+    </div>
+</body>
+</html>

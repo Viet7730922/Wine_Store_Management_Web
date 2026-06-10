@@ -1,0 +1,154 @@
+﻿@model Wine_Store_Management_Web.Models.Phieunhap
+
+@{
+    ViewData["Title"] = "KHO_BM2 - Phiếu Nhập Kho";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>PHIẾU NHẬP KHO - @Model.MaPhieuNhap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+            body {
+                font-family: 'Times New Roman', Times, serif;
+                color: #000;
+                margin: 0;
+                padding: 20px;
+                font-size: 16px;
+            }
+
+            .container {
+                max-width: 900px;
+                margin: 0 auto;
+                border: 2px solid #000;
+                padding: 20px;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                border: 1px solid #000;
+                padding: 8px 6px;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .text-left {
+                text-align: left;
+            }
+
+            .no-print {
+                display: block !important;
+            }
+
+            @@media print {
+                .no-print {
+                    display: none !important;
+                }
+
+                .container {
+                    border: none;
+                    padding: 10px;
+                }
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="text-center mb-4">
+            <h5 class="fw-bold">Cửa Hàng Chilliquer</h5>
+            <p class="small mb-1">Số 138, đường Mai Xuân Thưởng, Phường Nha Trang, Khánh Hòa</p>
+            <h3 class="fw-bold text-uppercase mt-3">PHIẾU NHẬP KHO</h3>
+            <p>Ngày...... tháng...... năm 20......</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Mã Số:</strong> <span class="fw-bold">@Model.MaPhieuNhap</span>
+        </div>
+
+        <div class="mb-2">
+            <strong>- Nhà cung cấp:</strong> @Model.NhaCungCap
+        </div>
+        <div class="mb-4">
+            <strong>- Nhập tại kho:</strong> @Model.NhapTaiKho
+        </div>
+
+        <!-- Bảng theo mẫu -->
+        <table class="mb-4">
+            <thead>
+                <tr class="fw-bold">
+                    <th style="width: 5%">STT</th>
+                    <th style="width: 35%">Tên Sản Phẩm</th>
+                    <th style="width: 15%">Mã Sản Phẩm</th>
+                    <th style="width: 10%">Đơn Vị Tính</th>
+                    <th style="width: 10%">Số Lượng</th>
+                    <th style="width: 15%">Đơn Giá</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ChitietPhieunhaps != null && Model.ChitietPhieunhaps.Any())
+                {
+                    int stt = 1;
+                    foreach (var ct in Model.ChitietPhieunhaps.OrderBy(c => c.MaSanPham))
+                    {
+                        <tr>
+                            <td>@stt</td>
+                            <td class="text-left">@ct.MaSanPhamNavigation?.TenSanPham</td>
+                            <td>@ct.MaSanPham</td>
+                            <td>@ct.MaSanPhamNavigation?.DonViTinh</td>
+                            <td>@ct.SoLuong</td>
+                            <td class="text-end">@ct.DonGia.ToString("N0")</td>
+                        </tr>
+                        stt++;
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="6" class="py-4">Không có dữ liệu sản phẩm</td></tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="mb-3">
+            <strong>- Tổng số tiền (Viết bằng chữ):</strong>
+            <span class="fst-italic">@Model.TongTienVietBangChu</span>
+        </div>
+
+        <div class="mb-5">
+            <strong>- Số chứng từ gốc kèm theo:</strong>
+            @Model.SoChungTuGoc
+        </div>
+
+        <!-- Chữ ký -->
+        <div class="row text-center mt-5">
+            <div class="col-8"></div>
+            <div class="col-4">
+                <p>Ngày...... tháng...... năm 20......</p>
+                <p class="fw-bold mt-4">Người nhập kho</p>
+                <p>(Ký, họ tên)</p>
+                <br><br>
+                <p class="fw-bold">@Model.NguoiNhapKhoNavigation?.HoTen</p>
+                <small>(@Model.NguoiNhapKho)</small>
+            </div>
+        </div>
+
+        <!-- 2 NÚT -->
+        <div class="text-center mt-5 no-print">
+            <button onclick="window.print()" class="btn btn-success px-5 py-3 fw-bold me-4">
+                🖨 Xuất in ấn
+            </button>
+            <a asp-action="Index" class="btn btn-secondary px-5 py-3 fw-bold">
+                Lịch sử phiếu nhập kho
+            </a>
+        </div>
+
+    </div>
+</body>
+</html>

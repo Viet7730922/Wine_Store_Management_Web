@@ -8,21 +8,32 @@
     <div class="card shadow">
         <div class="card-body p-5" style="color: #000; font-family: 'Times New Roman', Times, serif;">
 
-            <div class="text-center mb-4">
-                <h5 class="fw-bold m-0 text-uppercase">Cửa Hàng Chilliquer</h5>
-                <p class="m-0 small">Số 138, đường Mai Xuân Thưởng, Phường Nha Trang, Khánh Hòa</p>
-                <hr style="border-top: 1px dashed #000;" />
-                <h4 class="fw-bold mt-3 mb-1 text-uppercase">PHIẾU NHẬP KHO</h4>
-
-                <div class="d-flex justify-content-center g-2 mt-2">
-                    <span class="me-2 fw-bold">Ngày nhập:</span>
-                    <input asp-for="NgayNhap" type="date" class="form-control form-control-sm d-inline-block w-auto border-0 bg-transparent fw-bold" readonly />
-                </div>
-                <p class="m-0 mt-1 fw-bold">Mã Số: <input asp-for="MaPhieuNhap" class="form-control form-control-sm d-inline-block w-auto bg-light text-center text-danger fw-bold" readonly /></p>
-            </div>
-
             <form asp-action="Create" method="post">
+
+                <div class="text-center mb-4">
+                    <h5 class="fw-bold m-0 text-uppercase">Cửa Hàng Chilliquer</h5>
+                    <p class="m-0 small">Số 138, đường Mai Xuân Thưởng, Phường Nha Trang, Khánh Hòa</p>
+                    <hr style="border-top: 1px dashed #000;" />
+                    <h4 class="fw-bold mt-3 mb-1 text-uppercase">PHIẾU NHẬP KHO</h4>
+
+                    <div class="d-flex justify-content-center g-2 mt-2">
+                        <span class="me-2 fw-bold">Ngày nhập:</span>
+                        <span>@Model.NgayNhap</span>
+
+                        <input type="hidden"
+                               name="NgayNhap"
+                               value="@Model.NgayNhap" />
+                    </div>
+
+                    <p class="m-0 mt-1 fw-bold">
+                        Mã Số:
+                        <span class="text-danger fw-bold">@Model.MaPhieuNhap</span>
+                        <input asp-for="MaPhieuNhap" type="hidden" />
+                    </p>
+                </div>
+
                 <div asp-validation-summary="All" class="text-danger fw-bold small mb-3"></div>
+
 
                 <div class="row g-3 mb-4" style="font-size: 1.1rem;">
                     <div class="col-md-6 d-flex">

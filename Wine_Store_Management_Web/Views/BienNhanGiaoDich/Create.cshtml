@@ -1,78 +1,123 @@
 ﻿@model Wine_Store_Management_Web.Models.BiennhanGiaodich
 
 @{
-    ViewData["Title"] = "BH_BM6 - In Biên Nhận";
+    ViewData["Title"] = "Lập Biên Nhận - BH_BM6";
 }
 
 <div class="container mt-4 d-flex justify-content-center">
     <div class="card shadow-sm" style="width: 650px;">
-        <div class="card-body p-4">
+        <div class="card-body p-4 border border-2 border-dark rounded">
             <h4 class="text-center fw-bold mb-4">BIÊN NHẬN ĐỔI TRẢ HOẶC GIAO DỊCH</h4>
 
             <form asp-action="Create" method="post">
-                <div class="row mb-3 text-center">
+                <div asp-validation-summary="All" class="text-danger fw-bold text-center mb-3"></div>
+
+                <div class="row mb-4 text-center">
                     <div class="col-6">
                         <label class="fw-bold">Ngày in:</label>
-                        <input asp-for="NgayIn" type="date" class="form-control form-control-sm d-inline w-50 border-bottom-only" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <input asp-for="NgayIn" type="date" class="form-control form-control-sm d-inline w-50 border-bottom-only bg-light" readonly />
                     </div>
                     <div class="col-6">
                         <label class="fw-bold">Giờ:</label>
-                        <input asp-for="GioIn" type="time" class="form-control form-control-sm d-inline w-50 border-bottom-only" value="@DateTime.Now.ToString("HH:mm")" />
+                        <input asp-for="GioIn" type="time" class="form-control form-control-sm d-inline w-50 border-bottom-only bg-light" readonly />
                     </div>
                 </div>
 
                 <div class="mb-3 d-flex align-items-center">
                     <label class="fw-bold me-3">Loại biên nhận:</label>
-                    <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" asp-for="LoaiBienNhan" value="Đơn hàng chờ giao" id="lb1" checked>
-                        <label class="form-check-label" for="lb1">[ ] Đơn hàng chờ giao</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" asp-for="LoaiBienNhan" value="Biên nhận lấy hàng bảo hành" id="lb2">
-                        <label class="form-check-label" for="lb2">[ ] Biên nhận lấy hàng bảo hành</label>
-                    </div>
+                    <input asp-for="LoaiBienNhan" id="LoaiBienNhan" class="form-control border-bottom-only w-50 bg-light text-primary fw-bold" readonly placeholder="Hệ thống tự nhận diện..." required />
                 </div>
 
-                <div class="mb-4">
-                    <label class="fw-bold">Mã đối chiếu hệ thống:</label>
-                    <input asp-for="MaDoiChieuHeThong" class="form-control border-bottom-only w-75 d-inline" placeholder="..............................................................................." />
+                <div class="mb-4 d-flex">
+                    <label class="fw-bold text-nowrap mt-1 me-2">Mã đối chiếu hệ thống:</label>
+                    <select asp-for="MaDoiChieuHeThong" id="MaDoiChieuSelect" class="form-select border-bottom-only flex-grow-1 text-danger fw-bold" required>
+                        <option value="">-- Chọn mã Đơn hàng / Phiếu bảo hành --</option>
+                        @if (ViewBag.DanhSachMa != null)
+                        {
+                            foreach (dynamic gd in ViewBag.DanhSachMa)
+                            {
+                                <option value="@gd.Ma">@gd.Ma (@gd.Loai)</option>
+                            }
+                        }
+                    </select>
                 </div>
 
-                <h6 class="fw-bold text-decoration-underline">NỘI DUNG BIÊN NHẬN:</h6>
+                <h6 class="fw-bold text-decoration-underline mb-3">NỘI DUNG BIÊN NHẬN:</h6>
 
-                <div class="mb-2">
-                    <label class="fw-bold">- Tên khách hàng:</label>
-                    <input asp-for="TenKhachHang" class="form-control border-bottom-only w-75 d-inline" placeholder="........................................................................" />
+                <div class="mb-2 d-flex">
+                    <label class="fw-bold text-nowrap mt-1 me-2">- Tên khách hàng:</label>
+                    <input asp-for="TenKhachHang" id="TenKhachHang" class="form-control border-bottom-only flex-grow-1 bg-light" readonly placeholder="Tự động đổ dữ liệu..." required />
                 </div>
 
-                <div class="mb-2">
-                    <label class="fw-bold">- Số điện thoại:</label>
-                    <input asp-for="SoDienThoai" class="form-control border-bottom-only w-75 d-inline" placeholder="............................................................................" />
+                <div class="mb-3 d-flex align-items-center">
+                    <label class="fw-bold me-2 text-nowrap">- Số điện thoại:</label>
+                    <input asp-for="SoDienThoai" type="text" class="form-control border-bottom-only w-100" placeholder="Nhập số điện thoại đối chiếu..." required />
+                    <span asp-validation-for="SoDienThoai" class="text-danger"></span>
                 </div>
 
-                <div class="mb-2">
-                    <label class="fw-bold">- Chi tiết sản phẩm/Nội dung bàn giao:</label>
-                    <textarea asp-for="ChiTietSanPham" class="form-control border-bottom-only w-100" rows="2" placeholder="......................................................................"></textarea>
+                <div class="mb-2 d-flex">
+                    <label class="fw-bold text-nowrap mt-1 me-2">- Chi tiết sản phẩm/Nội dung bàn giao:</label>
+                    <textarea asp-for="ChiTietSanPham" id="ChiTietSanPham" class="form-control border-bottom-only flex-grow-1 bg-light" rows="2" readonly required></textarea>
                 </div>
 
                 <div class="mb-4 d-flex align-items-center">
-                    <label class="fw-bold me-2">- Tổng giá trị đối chiếu (nếu có):</label>
-                    <input asp-for="TongGiaTriDoiChieu" type="number" step="0.01" class="form-control border-bottom-only text-end" style="width: 150px;" placeholder="................................" />
+                    <label class="fw-bold text-nowrap me-2">- Tổng giá trị đối chiếu (nếu có):</label>
+                    <input asp-for="TongGiaTriDoiChieu" id="TongGiaTriDoiChieu" type="number" step="0.01" class="form-control border-bottom-only text-end bg-light fw-bold" style="width: 150px;" readonly />
                     <span class="ms-2 fw-bold">VNĐ</span>
                 </div>
 
                 <p class="fst-italic text-center mb-2">Biên nhận dùng để giao cho khách đối chiếu khi nhận hàng.</p>
-                <hr style="border-top: 1px solid #000;" />
+                <hr style="border-top: 1px dashed #000;" />
 
-                <div class="text-end mt-3">
-                    <label class="fw-bold">Người xuất phiếu (Thu ngân):</label>
-                    <input asp-for="ThuNganXuatPhieu" class="form-control border-bottom-only d-inline w-50" placeholder="....................................................................." value="@User.Identity?.Name" />
+                <div class="text-end mt-3 d-flex justify-content-end align-items-center">
+                    <label class="fw-bold me-2">Người xuất phiếu (Thu ngân):</label>
+                    <select asp-for="ThuNganXuatPhieu" class="form-select border-bottom-only w-50" required>
+                        <option value="">-- Chọn thu ngân --</option>
+                        @if (ViewBag.NhanViens != null)
+                        {
+                            foreach (var nv in ViewBag.NhanViens)
+                            {
+                                <option value="@nv.MaNhanVien">@nv.HoTen</option>
+                            }
+                        }
+                    </select>
                 </div>
 
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-secondary px-5"><i class="bi bi-printer"></i> Xác nhận & In</button>
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-dark px-5"><i class="bi bi-printer"></i> Xác nhận & Kết xuất In</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary ms-2">Lịch sử in</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    .border-bottom-only {
+        border: none;
+        border-bottom: 1px dotted #000;
+        border-radius: 0;
+        background-color: transparent;
+        outline: none;
+        box-shadow: none !important;
+    }
+
+        .border-bottom-only:focus {
+            border-bottom: 2px solid #212529;
+        }
+
+    select.border-bottom-only {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-left: 0;
+        cursor: pointer;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Nạp dữ liệu JSON từ Backend
+        window.giaoDichData = @Html.Raw(ViewBag.GiaoDichJson ?? "[]");
+    </script>
+    <script src="~/js/biennhangiaodich.js" asp-append-version="true"></script>
+}

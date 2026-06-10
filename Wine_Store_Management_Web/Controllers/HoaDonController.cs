@@ -181,8 +181,8 @@ namespace Wine_Store_Management_Web.Controllers
                         var khachHang = await _context.KhachHangs.FindAsync(hoaDon.MaKhachHang);
                         if (khachHang != null)
                         {
-                            // Tỷ lệ mới: Lấy tổng thanh toán chia cho 5000
-                            int diemTichLuyMoi = (int)Math.Floor(tongThanhToan / 5000);
+                            // Tỷ lệ mới: Lấy tổng thanh toán chia cho 10000
+                            int diemTichLuyMoi = (int)Math.Floor(tongThanhToan / 10000);
                             khachHang.DiemTichLuy += diemTichLuyMoi;
                             _context.Update(khachHang);
                         }
@@ -232,7 +232,7 @@ namespace Wine_Store_Management_Web.Controllers
         {
             var danhSachHoaDon = _context.HoaDons
                 .Include(h => h.MaKhachHangNavigation) // Đã sửa tên Navigation
-                .OrderByDescending(h => h.NgayHoaDon)
+                .OrderByDescending(h => h.MauSo)
                 .ToList();
             return View(danhSachHoaDon);
         }

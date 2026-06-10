@@ -6,35 +6,69 @@
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="text-success">LỊCH SỬ PHIẾU NHẬP KHO</h3>
-        <a asp-action="Create" class="btn btn-success"><i class="bi bi-plus-circle"></i> Tạo Phiếu Nhập</a>
+        <h3 class="text-success">📋 LỊCH SỬ PHIẾU NHẬP KHO</h3>
+        <a asp-action="Create" class="btn btn-success btn-lg">
+            <i class="bi bi-plus-circle"></i> Tạo Phiếu Nhập Mới
+        </a>
     </div>
 
     <div class="card shadow-sm">
-        <div class="card-body">
-            <table class="table table-hover table-bordered align-middle text-center">
-                <thead class="table-success">
-                    <tr>
-                        <th>Mã Phiếu Nhập</th>
-                        <th>Ngày Nhập</th>
-                        <th>Nhà Cung Cấp</th>
-                        <th>Nhập Tại Kho</th>
-                        <th>Người Nhập</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle text-center mb-0">
+                    <thead class="table-success">
                         <tr>
-                            <td class="fw-bold">@item.MaPhieuNhap</td>
-                            <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
-                            <td class="text-start">@item.NhaCungCap</td>
-                            <td>@item.NhapTaiKho</td>
-                            <td>@item.NguoiNhapKho</td>
+                            <th style="width: 15%">Mã Phiếu</th>
+                            <th style="width: 12%">Ngày Nhập</th>
+                            <th style="width: 25%">Nhà Cung Cấp</th>
+                            <th style="width: 20%">Nhập Tại Kho</th>
+                            <th style="width: 18%">Người Nhập</th>
+                            <th style="width: 10%">Thao tác</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-muted py-4">Chưa có phiếu nhập kho nào. Hãy tạo phiếu đầu tiên!</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-primary">@item.MaPhieuNhap</td>
+                                    <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-start">@item.NhaCungCap</td>
+                                    <td>@item.NhapTaiKho</td>
+                                    <td>
+                                        @if (item.NguoiNhapKhoNavigation != null)
+                                        {
+                                            <span>@item.NguoiNhapKhoNavigation.HoTen</span>
+                                            <small class="text-muted">(@item.NguoiNhapKho)</small>
+                                        }
+                                        else
+                                        {
+                                            <span>@item.NguoiNhapKho</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@item.MaPhieuNhap" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Xem
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
+
+    <div class="text-muted small mt-3 text-center">
+        Tổng số phiếu: <strong>@Model.Count()</strong>
     </div>
 </div>

@@ -37,18 +37,25 @@
 
     // 4. CƠ CHẾ NHÂN BẢN DÒNG (THÊM SẢN PHẨM MỚI COPPY THEO INDEX ĐÚNG CHUẨN C#)
     $('#btnAddRow').click(function () {
+
         var $firstRow = $('#nhapKhoTable tbody tr:first');
         var $newRow = $firstRow.clone();
 
-        // Làm sạch trắng dữ liệu của hàng mới nhân bản
-        $newRow.find('input').val('');
-        $newRow.find('.sp-ten').attr('placeholder', 'Hệ thống tự load...');
+        // Reset dữ liệu
+        $newRow.find('select').val("");
+        $newRow.find('.sp-ten').val("");
+        $newRow.find('.sp-dvt').val("");
         $newRow.find('.sp-soluong').val(1);
-        $newRow.find('select').prop('selectedIndex', 0);
-        $newRow.find('.btn-remove-row').prop('disabled', false); // Mở khóa nút xóa dòng
+        $newRow.find('.sp-gia').val(0);
+
+        // Mở nút xóa
+        $newRow.find('.btn-remove-row').prop('disabled', false);
 
         $('#nhapKhoTable tbody').append($newRow);
+
         danhLaiSoThuTuPhieuNhap();
+
+        tinhTongTienPhieuNhap();
     });
 
     // 5. CƠ CHẾ XÓA DÒNG
@@ -62,14 +69,28 @@
 
     // Ép gán lại thuộc tính chỉ mục Index [0], [1], [2] để Model Binder C# ánh xạ đúng vào List<ChiTietPhieuNhap>
     function danhLaiSoThuTuPhieuNhap() {
+
         $('#nhapKhoTable tbody tr').each(function (index) {
-            $(this).find('.row-stt').text(index + 1); // Cập nhật cột STT hiển thị
-            $(this).find('[name^="ChiTietPhieuNhaps["]').each(function () {
-                var name = $(this).attr('name');
-                var newName = name.replace(/\[\d+\]/, '[' + index + ']');
-                $(this).attr('name', newName);
-            });
+
+            $(this).find('.row-stt').text(index + 1);
+
+            $(this).find('select').attr(
+                'name',
+                'ChiTietPhieuNhaps[' + index + '].MaSanPham'
+            );
+
+            $(this).find('.sp-soluong').attr(
+                'name',
+                'ChiTietPhieuNhaps[' + index + '].SoLuong'
+            );
+
+            $(this).find('.sp-gia').attr(
+                'name',
+                'ChiTietPhieuNhaps[' + index + '].DonGia'
+            );
+
         });
+
     }
 
     // =========================================================

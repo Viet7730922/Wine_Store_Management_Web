@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Wine_Store_Management_Web.Data;
 using Wine_Store_Management_Web.Models;
-
+ 
 namespace Wine_Store_Management_Web.Controllers
 {
     public class TiepNhanBaoHanhController : Controller
